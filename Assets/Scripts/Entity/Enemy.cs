@@ -98,6 +98,7 @@ public class Enemy : LivingEntity
         if (damage >= currentHealth && !deathEffectPlayed){            
             float effectLifetime = deathEffectPrefab.main.startLifetime.constant;
             ParticleSystem deathEffect = Instantiate<ParticleSystem>(deathEffectPrefab, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection));
+            deathEffect.GetComponent<Renderer>().material.color = originalColor;
             deathEffect.Play();
             Destroy(deathEffect.gameObject, effectLifetime);
             deathEffectPlayed = true;

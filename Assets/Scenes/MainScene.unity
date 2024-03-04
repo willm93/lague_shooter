@@ -3304,7 +3304,7 @@ PrefabInstance:
     - target: {fileID: 4964926659555914418, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
       propertyPath: guns.Array.data[0]
       value: 
-      objectReference: {fileID: 6327072435086393449, guid: 916e53180fe170d488a70402e2eed380, type: 3}
+      objectReference: {fileID: 5202227945619902395, guid: 916e53180fe170d488a70402e2eed380, type: 3}
     - target: {fileID: 4964926659555914418, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
       propertyPath: guns.Array.data[1]
       value: 
