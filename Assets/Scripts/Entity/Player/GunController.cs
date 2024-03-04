@@ -9,7 +9,7 @@ public class GunController : MonoBehaviour
     public Gun[] guns;
     int currentGunIndex;
     int hiddenLayer;
-    public int defaultLayer;
+    int defaultLayer;
 
 
     void Start()
