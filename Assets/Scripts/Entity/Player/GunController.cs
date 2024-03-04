@@ -74,11 +74,10 @@ public class GunController : MonoBehaviour
     void ChangeLayer(Gun gun, int layer)
     {
         gun.gameObject.layer = layer;
-        foreach(Transform child in gun.transform){
+        Transform[] children = gun.GetComponentsInChildren<Transform>(includeInactive: true);
+        foreach (Transform child in children)
+        {
             child.gameObject.layer = layer;
-            foreach(Transform grandchild in child.transform){
-                grandchild.gameObject.layer = layer;
-            }
         }
     }
     

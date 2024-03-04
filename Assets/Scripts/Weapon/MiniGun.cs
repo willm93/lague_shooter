@@ -9,7 +9,7 @@ public class MiniGun : Gun
 
     [Header("Wind Up Fire Effects")]
     public Transform barrelRotary;
-    public float rotationSpeed = 1f;
+    public float rotationSpeed = 666f;
     public AudioClip windUpSound;
     public AudioClip spinningSound;
     public AudioClip fireContinuousSound;
@@ -33,6 +33,7 @@ public class MiniGun : Gun
     protected override void Update()
     {
         base.Update();
+
         //wind down
         if (!triggerHeld && windUpPercent > 0){
             windUpPercent -= Time.deltaTime * windDownSpeed;
@@ -88,6 +89,15 @@ public class MiniGun : Gun
                 audioSource.PlayOneShot(reloadSound);
             }
             currentWindingState = WindingState.Idle;
+            return;
+        }
+        if (bulletsRemaining == 0){
+            if (currentWindingState != WindingState.Idle){
+                currentWindingState = WindingState.Idle;
+                audioSource.Stop();
+                audioSource.PlayOneShot(emptyClick);
+            }
+            ReleaseTrigger();
             return;
         }
         if (!triggerHeld && windUpPercent <= 0 && currentWindingState != WindingState.Idle){

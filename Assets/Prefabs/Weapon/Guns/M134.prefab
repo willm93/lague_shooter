@@ -1954,12 +1954,12 @@ MonoBehaviour:
   muzzleVelocity: 85
   magSize: 500
   reloadTime: 3.3
-  verticalRecoil: 0.08
+  verticalRecoil: 0.06
   horizontalRecoil: 2
   vertRecoilRecoverTime: 0.08
   horzRecoilRecoverTime: 0.1
   barrelRotary: {fileID: 3924849484491643368}
-  rotationSpeed: 1
+  rotationSpeed: 666
   windUpSound: {fileID: 8300000, guid: 1b678865bfc56de40a8668347c484721, type: 3}
   spinningSound: {fileID: 8300000, guid: dc42d771ab54e5b48bcc62e9fda35443, type: 3}
   fireContinuousSound: {fileID: 8300000, guid: d99c3d5a2f4e6ea4f8959dde0e36a976, type: 3}

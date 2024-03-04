@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     
     void FixedUpdate()
     {
-        myRigidbody.Move(myRigidbody.position + (velocity * Time.deltaTime), Quaternion.LookRotation(direction));
+        myRigidbody.Move(myRigidbody.position + (velocity * Time.deltaTime), Quaternion.LookRotation(direction, Vector3.up));
     }
 
     public void Move(Vector3 _velocity)
