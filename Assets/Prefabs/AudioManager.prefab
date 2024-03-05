@@ -48,8 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   masterVolume: 1
-  sfxVolume: 0.4
-  musicVolume: 0.45
+  sfxVolume: 0.759
+  musicVolume: 0.25
 --- !u!114 &820915743594480724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,7 +78,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8fcbcb4536eac4408e56535c924047e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundGroups: []
+  soundGroups:
+  - groupName: Enemy Death
+    sounds:
+    - {fileID: 8300000, guid: 193d3efe6bb78d44681c03fc1c79e483, type: 3}
+    - {fileID: 8300000, guid: 11acb9d2aec944e409857139e9e02c1c, type: 3}
+    - {fileID: 8300000, guid: 45d10ebf423604243b10040d8232c46a, type: 3}
 --- !u!1 &7468966687934679141
 GameObject:
   m_ObjectHideFlags: 0
