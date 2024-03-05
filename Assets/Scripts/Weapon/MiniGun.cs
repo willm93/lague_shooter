@@ -126,6 +126,8 @@ public class MiniGun : Gun
 
     void OnDestroy()
     {
-        AudioManager.instance.FadeOutContinuousSound(0.1f);
+        if (AudioManager.instance != null){
+            AudioManager.instance.FadeOutContinuousSound(0.1f);
+        }
     }
 }

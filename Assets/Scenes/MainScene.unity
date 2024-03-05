@@ -7282,11 +7282,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2386301288552656836, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
       propertyPath: sfxVolume
-      value: 0.4
+      value: 0.759
       objectReference: {fileID: 0}
     - target: {fileID: 2386301288552656836, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
-      propertyPath: masterVolume
-      value: 1
+      propertyPath: musicVolume
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 4600549650818404002, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7328,6 +7328,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7618937407245540801, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: soundGroups.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7618937407245540801, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: soundGroups.Array.data[0].groupName
+      value: Enemy Death
+      objectReference: {fileID: 0}
+    - target: {fileID: 7618937407245540801, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: soundGroups.Array.data[0].sounds.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7618937407245540801, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: soundGroups.Array.data[0].sounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 193d3efe6bb78d44681c03fc1c79e483, type: 3}
+    - target: {fileID: 7618937407245540801, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: soundGroups.Array.data[0].sounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 11acb9d2aec944e409857139e9e02c1c, type: 3}
+    - target: {fileID: 7618937407245540801, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: soundGroups.Array.data[0].sounds.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 45d10ebf423604243b10040d8232c46a, type: 3}
+    - target: {fileID: 7618937407245540801, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: soundGroups.Array.data[0].sounds.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 353c1392c97e5a346be0874bb4392590, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

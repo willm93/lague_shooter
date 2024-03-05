@@ -34,6 +34,7 @@ public class GameUI : MonoBehaviour
     {
         if (waveNumber == 4) {
             RenderSettings.skybox = altSkybox;
+            GameObject.FindGameObjectWithTag("Directional Light").GetComponent<Light>().intensity = 2;
         }
 
         newWaveTitle.SetText("Wave " + waveNumber);
@@ -48,7 +49,7 @@ public class GameUI : MonoBehaviour
 
     IEnumerator AnimateNewWaveBanner()
     {
-        float time = 1f;
+        float time = 0.5f;
         float percent = 0f;
 
         while(percent < 1){

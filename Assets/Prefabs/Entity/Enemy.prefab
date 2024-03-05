@@ -150,7 +150,7 @@ MonoBehaviour:
   pathfinderAccel: 20
   pathfinderAngularSpeed: 60
   attackSound: {fileID: 8300000, guid: b31debc4513a3774e91c6a0fdf141c5e, type: 3}
-  deathSound: {fileID: 8300000, guid: 11acb9d2aec944e409857139e9e02c1c, type: 3}
+  deathSound: {fileID: 0}
   attackDamage: 5
   attackColor: {r: 0, g: 0, b: 0, a: 0}
   attackDistance: 1.1

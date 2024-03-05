@@ -113,7 +113,12 @@ public class Enemy : LivingEntity
 
     protected override void Die()
     {
-        AudioManager.instance.PlaySound(deathSound);
+        if (deathSound != null){
+            AudioManager.instance.PlaySound(deathSound);
+        } else {
+            AudioManager.instance.PlaySound("Enemy Death");
+        }
+        
         base.Die();
     }
 

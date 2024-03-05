@@ -2,15 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent( typeof(SoundLibrary))]
 public class AudioManager : MonoBehaviour
 {
+    public enum AudioChannel {Master, Sfx, Music}
     public static AudioManager instance;
+    
+    [Range(0,1)]
     public float masterVolume = 1f;
+    [Range(0,1)]
     public float sfxVolume = 1f;
+    [Range(0,1)]
     public float musicVolume = 1f;
 
+    SoundLibrary soundLibrary;
+
     Transform audioListener;
-    
+
     AudioSource[] musicSources;
     int activeMusicSourceIndex = 0;
 
@@ -19,32 +27,65 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
-        sfxVolume *= masterVolume;
-        musicVolume *= masterVolume;
+        if (instance != null){
+            Destroy(this.gameObject);
+        } else {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
 
-        audioListener = this.transform.Find("Audio Listener").transform;
-        audioListener.position = Vector3.zero;
+            soundLibrary = this.GetComponent<SoundLibrary>();
+            audioListener = this.transform.Find("Audio Listener").transform;
+            audioListener.position = Vector3.zero;
 
-        musicSources = new AudioSource[2];
-        for (int i = 0; i < musicSources.Length; i++){
-            GameObject newMusicSource = new GameObject("Music Source " + (i + 1));
-            musicSources[i] = newMusicSource.AddComponent<AudioSource>();
-            musicSources[i].volume = musicVolume;
-            newMusicSource.transform.parent = this.transform;
+            //masterVolume = PlayerPrefs.GetFloat("Master Volume");
+            //sfxVolume = PlayerPrefs.GetFloat("Sfx Volume");
+            //musicVolume = PlayerPrefs.GetFloat("Music Volume");
+
+            musicSources = new AudioSource[2];
+            for (int i = 0; i < musicSources.Length; i++){
+                GameObject newMusicSource = new GameObject("Music Source " + (i + 1));
+                musicSources[i] = newMusicSource.AddComponent<AudioSource>();
+                musicSources[i].volume = musicVolume * masterVolume;
+                newMusicSource.transform.parent = this.transform;
+            }
+
+            GameObject newSfxSource = new GameObject("Sfx Sound Source ");
+            sfxSource = newSfxSource.AddComponent<AudioSource>();
+            sfxSource.volume = sfxVolume * masterVolume;
+            sfxSource.transform.position = Vector3.zero;
+            newSfxSource.transform.parent = this.transform;
+
+            GameObject newContSfxSource = new GameObject("Continuous Sfx Sound Source ");
+            contSfxSource = newContSfxSource.AddComponent<AudioSource>();
+            contSfxSource.volume = sfxVolume * masterVolume;
+            contSfxSource.transform.position = Vector3.zero;
+            contSfxSource.transform.parent = this.transform;
+        }
+    }
+
+    public void SetVolume(float volume, AudioChannel channel)
+    {
+        volume = Mathf.Clamp01(volume);
+        switch (channel){
+            case AudioChannel.Master:
+                masterVolume = volume;
+                break;
+            case AudioChannel.Sfx:
+                sfxVolume = volume;
+                break;
+            case AudioChannel.Music:
+                musicVolume = volume;
+                break;
         }
 
-        GameObject newSfxSource = new GameObject("Sfx Sound Source ");
-        sfxSource = newSfxSource.AddComponent<AudioSource>();
-        sfxSource.volume = sfxVolume;
-        sfxSource.transform.position = Vector3.zero;
-        newSfxSource.transform.parent = this.transform;
+        musicSources[0].volume = musicVolume * masterVolume;
+        musicSources[1].volume = musicVolume * masterVolume;
+        sfxSource.volume = sfxVolume * masterVolume;
+        contSfxSource.volume = sfxVolume * masterVolume;
 
-        GameObject newContSfxSource = new GameObject("Continuous Sfx Sound Source ");
-        contSfxSource = newContSfxSource.AddComponent<AudioSource>();
-        contSfxSource.volume = sfxVolume;
-        contSfxSource.transform.position = Vector3.zero;
-        contSfxSource.transform.parent = this.transform;
+        PlayerPrefs.SetFloat("Master Volume", masterVolume);
+        PlayerPrefs.SetFloat("Sfx Volume", sfxVolume);
+        PlayerPrefs.SetFloat("Music Volume", musicVolume);
     }
 
     public void PlayMusic(AudioClip clip, float fadeDuration = 1f)
@@ -59,6 +100,11 @@ public class AudioManager : MonoBehaviour
     public void PlaySound(AudioClip clip)
     {
         sfxSource.PlayOneShot(clip);
+    }
+
+    public void PlaySound(string name)
+    {
+        sfxSource.PlayOneShot(soundLibrary.GetClipByName(name));
     }
 
     public void PlayContinuousSound(AudioClip clip)

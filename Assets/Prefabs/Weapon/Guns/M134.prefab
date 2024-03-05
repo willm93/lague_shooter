@@ -1648,9 +1648,9 @@ MonoBehaviour:
   horzRecoilRecoverTime: 0.1
   barrelRotary: {fileID: 3924849484491643368}
   rotationSpeed: 666
-  windUpSound: {fileID: 8300000, guid: 1b678865bfc56de40a8668347c484721, type: 3}
-  spinningSound: {fileID: 8300000, guid: dc42d771ab54e5b48bcc62e9fda35443, type: 3}
-  fireContinuousSound: {fileID: 8300000, guid: d99c3d5a2f4e6ea4f8959dde0e36a976, type: 3}
+  windUpSound: {fileID: 8300000, guid: ad213d184fb649f4a90a1bcf6a00adb5, type: 3}
+  spinningSound: {fileID: 8300000, guid: 2686087c2fe375741a1290b56ebf208c, type: 3}
+  fireContinuousSound: {fileID: 8300000, guid: d7be27340771b3f4db75da876e5647b0, type: 3}
   windUpSpeed: 1.2
   windDownSpeed: 0.5
 --- !u!1 &8469439662428330684
