@@ -42,17 +42,19 @@ public class EnemySpawner : MonoBehaviour
 
     void SkipWave()
     {
-        StopAllCoroutines();
-        waveSkipped++;
-        waveSkipped = Mathf.Clamp(waveSkipped, 0, waves.Length - 1);
+        if (waveSkipped < waves.Length){
+            StopAllCoroutines();
+            waveSkipped++;
 
-        foreach(Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None)){
-            Destroy(enemy.gameObject);
-            enemiesRemainingInWave--;
+            foreach(Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None)){
+                Destroy(enemy.gameObject);
+                enemiesRemainingInWave--;
+            }
+
+            StartCoroutine(RunWaves(waveSkipped));
+            StartCoroutine(AntiCampingTechnology());
         }
-
-        StartCoroutine(RunWaves(waveSkipped));
-        StartCoroutine(AntiCampingTechnology());
+        
     }
 
     IEnumerator RunWaves(int startingWave = 0)
@@ -70,6 +72,7 @@ public class EnemySpawner : MonoBehaviour
             } while (waves[i].infinite);
             
             yield return WaitUntilEnemiesDie();
+            waveSkipped++;
             Debug.Log("Wave " + (i + 1) + " Complete");
             yield return new WaitForSeconds(timeBetweenWaves);
         }

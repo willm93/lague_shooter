@@ -123,4 +123,9 @@ public class MiniGun : Gun
             barrelRotary.Rotate(Vector3.forward * Time.deltaTime * rotationSpeed);
         }
     }
+
+    void OnDestroy()
+    {
+        AudioManager.instance.FadeOutContinuousSound(0.1f);
+    }
 }
