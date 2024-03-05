@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public bool devMode;
-    int waveSkipped = 0;
+    int waveSkipped = 1;
     public Enemy enemy;
     public float timeBetweenWaves = 5f;
     public Wave[] waves;
@@ -50,7 +50,6 @@ public class EnemySpawner : MonoBehaviour
     {
         if (waveSkipped < waves.Length){
             StopAllCoroutines();
-            waveSkipped++;
 
             foreach(Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None)){
                 Destroy(enemy.gameObject);
@@ -59,6 +58,7 @@ public class EnemySpawner : MonoBehaviour
 
             StartCoroutine(RunWaves(waveSkipped));
             StartCoroutine(AntiCampingTechnology());
+            waveSkipped++;
         }
         
     }

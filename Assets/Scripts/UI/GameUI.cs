@@ -75,7 +75,7 @@ public class GameUI : MonoBehaviour
 
     IEnumerator AnimateNewWaveBanner()
     {
-        float time = 0.5f;
+        float time = 0.35f;
         float percent = 0f;
 
         while(percent < 1){
