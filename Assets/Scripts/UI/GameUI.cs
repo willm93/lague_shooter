@@ -11,6 +11,7 @@ public class GameUI : MonoBehaviour
     public GameObject gameOverUI;
     public Material altSkybox;
     Player player;
+    PlayerController playerController;
 
     public RectTransform newWaveBanner;
     Vector2 originalBannerPosition;
@@ -26,9 +27,13 @@ public class GameUI : MonoBehaviour
     float currentVelocity;
     float hpTransitionTime = 0.1f;
 
+    public RectTransform stamBar;
+    float stamPercent = 1;
+
     void Start()
     {
         player = FindObjectOfType<Player>();
+        playerController = player.GetComponent<PlayerController>();
         player.OnDeath += OnGameOver;    
 
         FindObjectOfType<EnemySpawner>().OnNewWave += OnNewWave;
@@ -38,10 +43,16 @@ public class GameUI : MonoBehaviour
     void Update()
     {
         scoreUI.text = "Kill Count: " + ScoreKeeper.score;
+
         if (player != null){
             healthPercent = Mathf.SmoothDamp(healthPercent,  player.currentHealth / (float) player.maxHealth, ref currentVelocity, hpTransitionTime);
         }
         hpBar.localScale = new Vector3(healthPercent, 1, 1);
+
+        if (playerController != null){
+            stamPercent = playerController.stamina / playerController.maxStamina;
+        }
+        stamBar.localScale = new Vector3(stamPercent, 1, 1);
 
     }
 

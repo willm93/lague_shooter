@@ -13,11 +13,12 @@ public class Player : LivingEntity
     Camera gameCamera;
 
     public Transform crosshair;
-    public float moveSpeed = 5f;
     Vector3 movementDirection;
     Plane groundPlane;
     Vector3 mousePoint;
     Vector3 gunOffsetFromPlayer;
+
+    bool sprintAttempted = false;
 
     void Awake()
     {
@@ -38,7 +39,7 @@ public class Player : LivingEntity
         gunOffsetFromPlayer = gunController.GunPosition() - this.transform.position;
         crosshair.position = GetMousePoint() + gunOffsetFromPlayer;
         controller.Face(GetMousePoint() - this.transform.position);
-        controller.Move(movementDirection * moveSpeed);
+        controller.Move(movementDirection, sprintAttempted);
     }
 
     void OnNewWave(int _i)
@@ -51,6 +52,9 @@ public class Player : LivingEntity
         input.Enable();
         input.Player.Movement.performed += OnMovementPerformed;
         input.Player.Movement.canceled += OnMovementCanceled;
+
+        input.Player.Sprint.performed += OnSprintPerformed;
+        input.Player.Sprint.canceled += OnSprintCanceled;
 
         input.Player.Fire.performed += OnFirePerformed;
         input.Player.Fire.canceled += OnFireCanceled;
@@ -65,6 +69,9 @@ public class Player : LivingEntity
         input.Disable();
         input.Player.Movement.performed -= OnMovementPerformed;
         input.Player.Movement.canceled -= OnMovementCanceled;
+
+        input.Player.Sprint.performed -= OnSprintPerformed;
+        input.Player.Sprint.canceled -= OnSprintCanceled;
 
         input.Player.Fire.performed -= OnFirePerformed;
         input.Player.Fire.canceled -= OnFireCanceled;
@@ -82,6 +89,16 @@ public class Player : LivingEntity
     void OnMovementCanceled(InputAction.CallbackContext value)
     {
         movementDirection = Vector3.zero;
+    }
+
+    void OnSprintPerformed(InputAction.CallbackContext value)
+    {
+        sprintAttempted = true;
+    }
+
+    void OnSprintCanceled(InputAction.CallbackContext value)
+    {
+        sprintAttempted = false;
     }
 
     void OnFirePerformed(InputAction.CallbackContext value)
