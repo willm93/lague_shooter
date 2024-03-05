@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent( typeof(AudioSource))]
 public class EnemySpawner : MonoBehaviour
 {
     public bool devMode;
@@ -15,7 +13,6 @@ public class EnemySpawner : MonoBehaviour
     MapGenerator mapGen;  
     Player player;
     public event System.Action<int> OnNewWave;
-    AudioSource audioSource;
 
     //anti-camping technolgies
     public float campingCheckInterval = 4f;
@@ -28,7 +25,6 @@ public class EnemySpawner : MonoBehaviour
     void Start()
     {
         mapGen = FindAnyObjectByType<MapGenerator>();
-        audioSource = this.GetComponent<AudioSource>();
         player = FindAnyObjectByType<Player>();
         player.OnDeath += OnPlayerDeath;
         oldPlayerPosition = player.transform.position;
@@ -133,8 +129,7 @@ public class EnemySpawner : MonoBehaviour
 
     void OnEnemyDeath()
     {
-        enemiesRemainingInWave --;
-        audioSource.PlayOneShot(audioSource.clip);
+        enemiesRemainingInWave--;
     }
 
     void OnPlayerDeath()

@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent ( typeof (NavMeshAgent))]
-[RequireComponent ( typeof (AudioSource))]
 public class Enemy : LivingEntity
 {
     public enum State {Idle, Chasing, Attacking};
@@ -16,7 +15,8 @@ public class Enemy : LivingEntity
     public float pathfinderAngularSpeed;
     LivingEntity targetEntity;
     Transform target;
-    AudioSource audioSource;
+    public AudioClip attackSound;
+    public AudioClip deathSound;
     
 
     public int attackDamage = 5;
@@ -37,7 +37,6 @@ public class Enemy : LivingEntity
     void Awake()
     {
         pathfinder = this.GetComponent<NavMeshAgent>();
-        audioSource = this.GetComponent<AudioSource>();
         myMaterial = this.GetComponent<Renderer>().material;
     }
 
@@ -111,7 +110,13 @@ public class Enemy : LivingEntity
         hasTarget = false;
         currentState = State.Idle;
     }
-    
+
+    protected override void Die()
+    {
+        AudioManager.instance.PlaySound(deathSound);
+        base.Die();
+    }
+
     IEnumerator Attack()
     {
         currentState = State.Attacking;
@@ -127,7 +132,7 @@ public class Enemy : LivingEntity
         bool hasAppliedDamage = false;
 
         myMaterial.color = attackColor;
-        audioSource.PlayOneShot(audioSource.clip);
+        AudioManager.instance.PlaySound(attackSound);
         while (percent <= 1){
             //apply damage halfway through animation
             if (percent > 0.5f && !hasAppliedDamage){

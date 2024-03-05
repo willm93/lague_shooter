@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MiniGun : Gun
 {
-    enum WindingState {WindingUp, Spinning, Firing, WindingDown, Idle}
+    enum WindingState {WindingUp, Spinning, Firing, Idle}
     WindingState currentWindingState;
 
     [Header("Wind Up Fire Effects")]
@@ -14,9 +14,6 @@ public class MiniGun : Gun
     public AudioClip spinningSound;
     public AudioClip fireContinuousSound;
     float spinningStartTime;
-    float initialVolume;
-    float fadingVolume;
-    float fadeSpeed = 1.5f;
 
     public float windUpSpeed = 1f;
     public float windDownSpeed = 0.5f;
@@ -27,7 +24,6 @@ public class MiniGun : Gun
     protected override void Start()
     {
         base.Start();
-        initialVolume = audioSource.volume;
     }
 
     protected override void Update()
@@ -38,7 +34,7 @@ public class MiniGun : Gun
         if (!triggerHeld && windUpPercent > 0){
             windUpPercent -= Time.deltaTime * windDownSpeed;
         }
-        HandleWindUpFireEffects();
+        HandleEffects();
     }
 
     public override void HoldTrigger()
@@ -49,7 +45,7 @@ public class MiniGun : Gun
             StartCoroutine(currentFiringRoutine);
         }
         if (bulletsRemaining == 0 && !isReloading){
-            audioSource.PlayOneShot(emptyClick);
+            AudioManager.instance.PlaySound(emptyClick);
         }
     }
 
@@ -80,59 +76,49 @@ public class MiniGun : Gun
         currentFiringRoutine = null;
     }
 
-    void HandleWindUpFireEffects()
+    void HandleEffects()
     {
         //sounds bad if the player spams left click right before the gun is about to fire, but works ok if they hold it as intended
         if (isReloading){
             if(currentWindingState != WindingState.Idle){
-                audioSource.Stop();
-                audioSource.PlayOneShot(reloadSound);
+                AudioManager.instance.FadeOutContinuousSound(0.1f);
+                AudioManager.instance.PlaySound(reloadSound);
             }
             currentWindingState = WindingState.Idle;
             return;
         }
+
         if (bulletsRemaining == 0){
             if (currentWindingState != WindingState.Idle){
                 currentWindingState = WindingState.Idle;
-                audioSource.Stop();
-                audioSource.PlayOneShot(emptyClick);
+                AudioManager.instance.FadeOutContinuousSound(0.1f);
+                AudioManager.instance.PlaySound(emptyClick);
             }
             ReleaseTrigger();
             return;
         }
+
         if (!triggerHeld && windUpPercent <= 0 && currentWindingState != WindingState.Idle){
-            if (fadingVolume > 0.05f){
-                currentWindingState = WindingState.WindingDown;
-                fadingVolume -= Time.deltaTime * fadeSpeed;
-                audioSource.volume = fadingVolume;
-            } else {
-                currentWindingState = WindingState.Idle;
-                audioSource.Stop();
-                fadingVolume = initialVolume;
-                audioSource.volume = initialVolume;
-            }
+            currentWindingState = WindingState.Idle;
+            AudioManager.instance.FadeOutContinuousSound(0.8f);
         } 
+
         if (windUpPercent > 0 && currentWindingState == WindingState.Idle){
             currentWindingState = WindingState.WindingUp;
-            spinningStartTime = Time.time + windUpSound.length - 0.01f;
-            audioSource.PlayOneShot(windUpSound); 
+            spinningStartTime = Time.time + windUpSound.length - 0.02f;
+            AudioManager.instance.PlaySound(windUpSound);
         }
+
         if (windUpPercent > 0 && windUpPercent < 1 && currentWindingState != WindingState.Spinning && Time.time > spinningStartTime){
             currentWindingState = WindingState.Spinning;
-            audioSource.Stop();
-            audioSource.clip = spinningSound;
-            fadingVolume = initialVolume;
-            audioSource.volume = initialVolume;
-            audioSource.Play();
-            audioSource.loop = true;
+            AudioManager.instance.PlayContinuousSound(spinningSound);
         }
+
         if (triggerHeld && windUpPercent >= 1 && currentWindingState != WindingState.Firing){
             currentWindingState = WindingState.Firing;
-            audioSource.Stop();
-            audioSource.clip = fireContinuousSound;
-            audioSource.Play();
-            audioSource.loop = true;
+            AudioManager.instance.PlayContinuousSound(fireContinuousSound);
         }
+
         if (currentWindingState != WindingState.Idle){
             barrelRotary.Rotate(Vector3.forward * Time.deltaTime * rotationSpeed);
         }

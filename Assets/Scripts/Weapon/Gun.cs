@@ -1,20 +1,18 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent (typeof (AudioSource))]
 [RequireComponent (typeof (MuzzleFlash))]
-public class Gun : MonoBehaviour, IFirearm
+public abstract class Gun : MonoBehaviour, IFirearm
 {
-    public String nameOfGun;
+    public string nameOfGun;
     public Transform[] projectileSpawns;
     public Transform ejector;
     public Projectile projectilePrefab;
     public Shell shellPrefab;
-    protected AudioSource audioSource;
     protected MuzzleFlash muzzleFlash;
     
+    public AudioClip fireSound;
     public AudioClip reloadSound;
     public AudioClip emptyClick;
 
@@ -27,7 +25,6 @@ public class Gun : MonoBehaviour, IFirearm
     protected bool isReloading;
     public bool IsReloading { get {return isReloading; } }
     protected bool triggerHeld;
-    //public bool TriggerHeld() { return triggerHeld; }
 
     [Header("Recoil")]
     public float verticalRecoil = 0.2f;
@@ -42,7 +39,6 @@ public class Gun : MonoBehaviour, IFirearm
 
     protected virtual void Start()
     {
-        audioSource = this.GetComponent<AudioSource>();
         muzzleFlash = this.GetComponent<MuzzleFlash>();
 
         //msBetweenShots = 60000 / rpm;
@@ -97,7 +93,7 @@ public class Gun : MonoBehaviour, IFirearm
 
     protected IEnumerator ReloadRoutine()
     {
-        audioSource.PlayOneShot(reloadSound);
+        AudioManager.instance.PlaySound(reloadSound);
 
         float reloadPercent = 0;
         float interpolation;

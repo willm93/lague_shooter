@@ -16,12 +16,12 @@ public class GunController : MonoBehaviour
     {
         hiddenLayer = LayerMask.NameToLayer("Hidden");
         defaultLayer = LayerMask.NameToLayer("Default");
-
-        if (guns != null){
-            for(int i = 0; i < guns.Length; i++){
-                guns[i] = Instantiate<Gun>(guns[i], weaponHoldPoint.position, weaponHoldPoint.rotation, weaponHoldPoint);
-                ChangeLayer(guns[i], hiddenLayer);
-            }
+    
+        for(int i = 0; i < guns.Length; i++){
+            guns[i] = Instantiate<Gun>(guns[i], weaponHoldPoint.position, weaponHoldPoint.rotation, weaponHoldPoint);
+            ChangeLayer(guns[i], hiddenLayer);
+        }
+        if (guns.Length > 0){
             currentGunIndex = 0;
             EquipGun(currentGunIndex);
         }
@@ -38,7 +38,7 @@ public class GunController : MonoBehaviour
 
     public void NextGun()
     {
-        if (!equippedGun.IsReloading){
+        if (!equippedGun.IsReloading && guns.Length > 0){
             currentGunIndex = (currentGunIndex + 1) % guns.Length;
             equippedGun.ReleaseTrigger();
             EquipGun(currentGunIndex);
