@@ -17,6 +17,7 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI newWaveTitle;
     public float bannerPauseTime = 1.5f;
     IEnumerator currentCoroutine;
+
     void Start()
     {
         FindObjectOfType<Player>().OnDeath += OnGameOver;    
@@ -85,6 +86,6 @@ public class GameUI : MonoBehaviour
     //UI Input
     public void StartNewGame()
     {
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("GameScene");
     }
 }
