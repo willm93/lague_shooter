@@ -10,6 +10,7 @@ public class GameUI : MonoBehaviour
     public Image fadePlane;
     public GameObject gameOverUI;
     public Material altSkybox;
+    Player player;
 
     public RectTransform newWaveBanner;
     Vector2 originalBannerPosition;
@@ -18,16 +19,40 @@ public class GameUI : MonoBehaviour
     public float bannerPauseTime = 1.5f;
     IEnumerator currentCoroutine;
 
+    public TextMeshProUGUI scoreUI;
+    public TextMeshProUGUI gameOverScoreUI;
+    public RectTransform hpBar;
+    float healthPercent = 1;
+    float currentVelocity;
+    float hpTransitionTime = 0.1f;
+
     void Start()
     {
-        FindObjectOfType<Player>().OnDeath += OnGameOver;    
+        player = FindObjectOfType<Player>();
+        player.OnDeath += OnGameOver;    
+
         FindObjectOfType<EnemySpawner>().OnNewWave += OnNewWave;
         originalBannerPosition = newWaveBanner.anchoredPosition;
     }
 
+    void Update()
+    {
+        scoreUI.text = "Kill Count: " + ScoreKeeper.score;
+        if (player != null){
+            healthPercent = Mathf.SmoothDamp(healthPercent,  player.currentHealth / (float) player.maxHealth, ref currentVelocity, hpTransitionTime);
+        }
+        hpBar.localScale = new Vector3(healthPercent, 1, 1);
+
+    }
+
     void OnGameOver()
     {
-        StartCoroutine(Fade(Color.clear, Color.black, 1));
+        Cursor.visible = true;
+        StartCoroutine(Fade(Color.clear, new Color(0, 0, 0, 0.85f), 1));
+        scoreUI.gameObject.SetActive(false);
+        hpBar.transform.parent.gameObject.SetActive(false);
+
+        gameOverScoreUI.text = scoreUI.text;
         gameOverUI.SetActive(true);
     }
 
@@ -88,4 +113,10 @@ public class GameUI : MonoBehaviour
     {
         SceneManager.LoadScene("GameScene");
     }
+
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }
+

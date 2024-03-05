@@ -1,35 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MusicManager : MonoBehaviour
 {
-    public AudioClip[] themes;
-    public float fadeDuration = 0.75f;
-    int currentThemeIndex;
-
+    public NamedTheme[] themes;
+    public Dictionary<string, AudioClip> themeLookup = new Dictionary<string, AudioClip>();
+    public float fadeDuration = 1f;
+    string currentTheme;
+    string currentSceneName;
     
     void Start()
+    {
+        for(int i = 0; i < themes.Length; i++){
+            themeLookup.Add(themes[i].themeName, themes[i].theme);
+        }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        currentSceneName = SceneManager.GetActiveScene().name;
+        SetTheme(currentSceneName);
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         EnemySpawner spawner = FindAnyObjectByType<EnemySpawner>();
         if (spawner != null){
             spawner.OnNewWave += OnThemeChange;
         }
 
-        currentThemeIndex = 0;
-        AudioManager.instance.PlayMusic(themes[currentThemeIndex]);
+        if (currentSceneName != scene.name){
+            currentSceneName = scene.name;
+            currentTheme = currentSceneName;
+            SetTheme(currentTheme);
+        }
     }
 
-    void SetTheme(int index)
+    void SetTheme(string key)
     {
-        currentThemeIndex = index;
-        AudioManager.instance.PlayMusic(themes[currentThemeIndex], 0.5f);
+        currentTheme = key;
+        Debug.Log("Current Theme: " + currentTheme);
+        AudioManager.instance.PlayMusic(themeLookup[key], fadeDuration);
     }
     
     public void OnThemeChange(int waveNumber)
     {
         if (waveNumber == 4){
-            SetTheme(1);
+            SetTheme("final_wave");
         }
+    }
+
+    [System.Serializable]
+    public class NamedTheme {
+        public string themeName;
+        public AudioClip theme;
     }
 }

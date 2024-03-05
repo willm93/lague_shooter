@@ -417,9 +417,9 @@ MonoBehaviour:
   - {fileID: 1704843824}
   - {fileID: 1349957632}
   - {fileID: 1330630642}
+  fullscreen: {fileID: 1304972704}
   resolution: {fileID: 646888947}
   screenWidths: c00300000005000080070000
-  fullscreen: {fileID: 1304972704}
 --- !u!1 &208764537
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,6 +1229,34 @@ PrefabInstance:
     - target: {fileID: 216139218959064131, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 820915743594480724, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: themes.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 820915743594480724, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: themes.Array.data[0].theme
+      value: 
+      objectReference: {fileID: 8300000, guid: 077f9591cf90b944c95973fcb3b57bd0, type: 3}
+    - target: {fileID: 820915743594480724, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: themes.Array.data[1].theme
+      value: 
+      objectReference: {fileID: 8300000, guid: 657c90d407de3ec458d20e77cf8d44e2, type: 3}
+    - target: {fileID: 820915743594480724, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: themes.Array.data[2].theme
+      value: 
+      objectReference: {fileID: 8300000, guid: e4a3300d497e9394e8bb645bdfc24ebc, type: 3}
+    - target: {fileID: 820915743594480724, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: themes.Array.data[0].themeName
+      value: MainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 820915743594480724, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: themes.Array.data[1].themeName
+      value: GameScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 820915743594480724, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
+      propertyPath: themes.Array.data[2].themeName
+      value: final_wave
       objectReference: {fileID: 0}
     - target: {fileID: 4600549650818404002, guid: 5339a66227f089e4187f36ce413a699b, type: 3}
       propertyPath: m_LocalPosition.x

@@ -27,12 +27,18 @@ public class EnemySpawner : MonoBehaviour
         mapGen = FindAnyObjectByType<MapGenerator>();
         player = FindAnyObjectByType<Player>();
         player.OnDeath += OnPlayerDeath;
+        Enemy.OnDeathStatic += OnEnemyDeath;
         oldPlayerPosition = player.transform.position;
 
         StartCoroutine(RunWaves());
         StartCoroutine(AntiCampingTechnology());
     }
 
+    void OnDestroy()
+    {
+        Enemy.OnDeathStatic -= OnEnemyDeath;
+    }
+    
     void Update()
     {
         if (devMode && Input.GetKeyDown(KeyCode.N)){
@@ -105,8 +111,6 @@ public class EnemySpawner : MonoBehaviour
         tileMaterial.color = initialColor;
         Enemy newEnemy = Instantiate<Enemy>(enemy, spawnTile.transform.position + Vector3.up, Quaternion.identity, this.transform);
         newEnemy.SetCharacteristics(wave.enemySpeed, wave.enemyHealth, wave.attackDamage, wave.enemyColor, wave.attackColor);
-        newEnemy.OnDeath += OnEnemyDeath;
-        
         
     }
 

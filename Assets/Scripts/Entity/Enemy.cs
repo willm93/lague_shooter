@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,7 @@ public class Enemy : LivingEntity
     Transform target;
     public AudioClip attackSound;
     public AudioClip deathSound;
+    public static event Action OnDeathStatic;
     
 
     public int attackDamage = 5;
@@ -118,7 +120,7 @@ public class Enemy : LivingEntity
         } else {
             AudioManager.instance.PlaySound("Enemy Death");
         }
-        
+        OnDeathStatic?.Invoke();
         base.Die();
     }
 
