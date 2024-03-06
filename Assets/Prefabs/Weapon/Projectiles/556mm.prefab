@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 100
-  damage: 5
+  damage: 8
   collisionMask:
     serializedVersion: 2
     m_Bits: 384

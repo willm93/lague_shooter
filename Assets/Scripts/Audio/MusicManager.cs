@@ -30,7 +30,7 @@ public class MusicManager : MonoBehaviour
             spawner.OnNewWave += OnThemeChange;
         }
 
-        if (currentSceneName != scene.name){
+        if (currentSceneName != scene.name || currentTheme != scene.name){
             currentSceneName = scene.name;
             currentTheme = currentSceneName;
             SetTheme(currentTheme);

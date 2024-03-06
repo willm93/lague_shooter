@@ -27,4 +27,10 @@ public class ScoreKeeper : MonoBehaviour
         lastEnemyKilledTime = Time.time;
         score++;
     }
+
+    void OnDestroy()
+    {
+        score = 0;
+        Enemy.OnDeathStatic -= OnEnemyKilled;
+    }
 }

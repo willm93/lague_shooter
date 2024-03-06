@@ -47,9 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c9266d3e76b74447a033f41966bee86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterVolume: 1
-  sfxVolume: 0.759
-  musicVolume: 0.25
 --- !u!114 &820915743594480724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,8 +60,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   themes:
-  - {fileID: 8300000, guid: 657c90d407de3ec458d20e77cf8d44e2, type: 3}
-  - {fileID: 8300000, guid: e4a3300d497e9394e8bb645bdfc24ebc, type: 3}
+  - themeName: MainMenu
+    theme: {fileID: 8300000, guid: 077f9591cf90b944c95973fcb3b57bd0, type: 3}
+  - themeName: GameScene
+    theme: {fileID: 8300000, guid: 657c90d407de3ec458d20e77cf8d44e2, type: 3}
+  - themeName: final_wave
+    theme: {fileID: 8300000, guid: e4a3300d497e9394e8bb645bdfc24ebc, type: 3}
   fadeDuration: 0.75
 --- !u!114 &7618937407245540801
 MonoBehaviour:
@@ -84,6 +85,14 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 193d3efe6bb78d44681c03fc1c79e483, type: 3}
     - {fileID: 8300000, guid: 11acb9d2aec944e409857139e9e02c1c, type: 3}
     - {fileID: 8300000, guid: 45d10ebf423604243b10040d8232c46a, type: 3}
+  - groupName: Test
+    sounds:
+    - {fileID: 8300000, guid: 193d3efe6bb78d44681c03fc1c79e483, type: 3}
+    - {fileID: 8300000, guid: 11acb9d2aec944e409857139e9e02c1c, type: 3}
+    - {fileID: 8300000, guid: 45d10ebf423604243b10040d8232c46a, type: 3}
+    - {fileID: 8300000, guid: b31debc4513a3774e91c6a0fdf141c5e, type: 3}
+    - {fileID: 8300000, guid: 74c4d88f6fd587141845e31ff95735b3, type: 3}
+    - {fileID: 8300000, guid: 740f12131766081408e98c6f65df0ca1, type: 3}
 --- !u!1 &7468966687934679141
 GameObject:
   m_ObjectHideFlags: 0
