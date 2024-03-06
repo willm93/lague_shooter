@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StandardGun : Gun
+public class ABSGun : Gun
 {
     public enum FireMode {Auto, Burst, Single}
     public FireMode fireMode;
@@ -62,7 +62,7 @@ public class StandardGun : Gun
     IEnumerator BurstFire()
     {
         for(int i = 0; i < burstCount; i++){
-            if (bulletsRemaining < 0){
+            if (bulletsRemaining <= 0){
                 break;
             }
 

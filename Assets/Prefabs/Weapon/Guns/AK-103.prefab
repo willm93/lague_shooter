@@ -320,7 +320,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.05, z: 0.235}
-  m_LocalScale: {x: 0.120109215, y: 0.15191095, z: 0.5387906}
+  m_LocalScale: {x: 0.117541276, y: 0.15191095, z: 0.5387906}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1455523687101585526}
@@ -764,8 +764,8 @@ Transform:
   m_GameObject: {fileID: 7644003636362898073}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.078}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.0039044, z: -0.088049}
+  m_LocalScale: {x: 1.0354, y: 1.0354, z: 1.0354}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3899930671832281109}
@@ -1090,9 +1090,9 @@ MonoBehaviour:
   muzzleVelocity: 75
   magSize: 30
   reloadTime: 2
-  verticalRecoil: 0.2
-  horizontalRecoil: 5
-  vertRecoilRecoverTime: 0.1
+  verticalRecoil: 0.12
+  horizontalRecoil: 6
+  vertRecoilRecoverTime: 0.2
   horzRecoilRecoverTime: 0.1
   fireMode: 0
   burstCount: 3
@@ -1226,7 +1226,7 @@ Transform:
   m_GameObject: {fileID: 9207857850878963864}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0206, z: 0.929}
+  m_LocalPosition: {x: 0, y: 0.025, z: 0.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

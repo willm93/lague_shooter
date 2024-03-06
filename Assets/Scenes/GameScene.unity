@@ -2372,38 +2372,6 @@ PrefabInstance:
       propertyPath: crosshair
       value: 
       objectReference: {fileID: 42718890}
-    - target: {fileID: 4146273262731694729, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
-      propertyPath: moveSpeed
-      value: 6.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4146273262731694729, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
-      propertyPath: maxStamina
-      value: 125
-      objectReference: {fileID: 0}
-    - target: {fileID: 4146273262731694729, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
-      propertyPath: sprintSpeed
-      value: 9.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4146273262731694729, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
-      propertyPath: staminaUsageRate
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4964926659555914418, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
-      propertyPath: guns.Array.data[0]
-      value: 
-      objectReference: {fileID: 5202227945619902395, guid: 916e53180fe170d488a70402e2eed380, type: 3}
-    - target: {fileID: 4964926659555914418, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
-      propertyPath: guns.Array.data[1]
-      value: 
-      objectReference: {fileID: 6327072435086393449, guid: 8a925de42c9f18f49ae41e40c598b7e5, type: 3}
-    - target: {fileID: 4964926659555914418, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
-      propertyPath: guns.Array.data[2]
-      value: 
-      objectReference: {fileID: 6327072435086393449, guid: 2155fe2a30d3a4443b0b4e79132d6234, type: 3}
-    - target: {fileID: 4964926659555914418, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
-      propertyPath: guns.Array.data[3]
-      value: 
-      objectReference: {fileID: 6327072435086393449, guid: 8dcb152c0e7de0b42a2bd0e9695e6715, type: 3}
     - target: {fileID: 7923160554003938042, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
       propertyPath: m_Name
       value: Player

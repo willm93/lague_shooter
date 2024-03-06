@@ -65,6 +65,21 @@ public abstract class Gun : MonoBehaviour, IFirearm
         isReloading = true;
     }
 
+    public string GetNameOfGun()
+    {
+        return nameOfGun;
+    }
+
+    public int GetBulletsRemaining()
+    {
+        return bulletsRemaining;
+    }
+
+    public int GetMagSize()
+    {
+        return magSize;
+    }
+
     void RecoilRecovery()
     {
         this.transform.localPosition = Vector3.SmoothDamp(this.transform.localPosition, Vector3.zero, ref vertRecoilRecoverVelocity, vertRecoilRecoverTime);

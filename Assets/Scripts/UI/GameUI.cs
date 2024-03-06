@@ -12,6 +12,7 @@ public class GameUI : MonoBehaviour
     public Material altSkybox;
     Player player;
     PlayerController playerController;
+    GunController gunController;
 
     public RectTransform newWaveBanner;
     Vector2 originalBannerPosition;
@@ -30,13 +31,20 @@ public class GameUI : MonoBehaviour
     public RectTransform stamBar;
     float stamPercent = 1;
 
+    public TextMeshProUGUI ammoUI;
+
     void Start()
     {
         player = FindObjectOfType<Player>();
         playerController = player.GetComponent<PlayerController>();
+        gunController = player.GetComponent<GunController>();
         player.OnDeath += OnGameOver;    
 
-        FindObjectOfType<EnemySpawner>().OnNewWave += OnNewWave;
+        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
+        if (spawner != null){
+            spawner.OnNewWave += OnNewWave;
+        }
+        
         originalBannerPosition = newWaveBanner.anchoredPosition;
     }
 
@@ -53,6 +61,10 @@ public class GameUI : MonoBehaviour
             stamPercent = playerController.stamina / playerController.maxStamina;
         }
         stamBar.localScale = new Vector3(stamPercent, 1, 1);
+
+        if (gunController != null){
+            ammoUI.text = gunController.equippedGun.nameOfGun + "\n" + gunController.equippedGun.GetBulletsRemaining() + " / " + gunController.equippedGun.GetMagSize();
+        }
 
     }
 
