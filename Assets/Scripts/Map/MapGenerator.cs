@@ -26,8 +26,6 @@ public class MapGenerator : MonoBehaviour
     Queue<MapCoordinate> shuffledTileCoords;
     Queue<MapCoordinate> shuffledOpenTileCoords;
 
-    public Dictionary<string, AudioClip> skyBoxLookup = new Dictionary<string, AudioClip>();
-
     void Start()
     {
         FindAnyObjectByType<EnemySpawner>().OnNewWave += OnNewWave;

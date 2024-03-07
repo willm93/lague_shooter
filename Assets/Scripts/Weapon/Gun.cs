@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,40 +6,55 @@ using UnityEngine;
 [RequireComponent (typeof (MuzzleFlash))]
 public abstract class Gun : MonoBehaviour
 {
-    public string nameOfGun;
-    public Transform[] projectileSpawns;
-    public Transform ejector;
-    public Projectile projectilePrefab;
-    public Shell shellPrefab;
+    [SerializeField] 
+    protected string nameOfGun; 
+    public string NameOfGun {get => nameOfGun;}
+
+    [SerializeField] protected Transform[] projectileSpawns;
+    [SerializeField] protected Transform ejector;
+    [SerializeField] protected Projectile projectilePrefab;
+    [SerializeField] protected Shell shellPrefab;
     protected MuzzleFlash muzzleFlash;
     
-    public AudioClip fireSound;
-    public AudioClip reloadSound;
-    public AudioClip emptyClick;
+    [SerializeField] protected AudioClip fireSound, reloadSound, emptyClick;
 
-    public float rpm = 400f;
+    [SerializeField] protected float rpm; 
     protected float secondsBetweenShots;
-    public float muzzleVelocity = 35f;
-    public int magSize = 1;
+
+    [SerializeField] 
+    protected float muzzleVelocity; 
+    public float MuzzleVelocity {get => muzzleVelocity;}
+
+    [SerializeField] 
+    protected int magSize; 
+    public int MagSize {get => magSize;}
+
     protected int bulletsRemaining;
-    public float reloadTime;
-    public float ReloadTime {get {return reloadTime;}}
+
+    [SerializeField] 
+    protected float reloadTime; 
+    public float ReloadTime {get => reloadTime;}
+
     protected bool isReloading;
     protected bool triggerHeld;
-
-    [Header("Recoil")]
-    public float verticalRecoil = 0.2f;
-    public float horizontalRecoil = 2f;
-    protected Vector3 vertRecoilRecoverVelocity; 
-    public float vertRecoilRecoverTime = 0.1f;
-    protected float horzRecoilRecoverVelocity; 
-    public float horzRecoilRecoverTime = 0.1f;
+    
+    [SerializeField] 
+    protected float verticalRecoil = 0.1f, 
+                    horizontalRecoil = 1f, 
+                    vertRecoilRecoverTime = 0.1f, 
+                    horzRecoilRecoverTime = 0.1f;
+    protected Vector3 vertRecoilRecoverVelocity;
+    protected float horzRecoilRecoverVelocity;
 
     protected Projectile newProjectile;
     protected Shell newShell;
 
     protected virtual void Start()
     {
+        if (reloadTime <= 0){
+            throw new ArgumentOutOfRangeException($"reloadTime of {this.nameOfGun} cannot be <= 0");
+        }
+        
         muzzleFlash = this.GetComponent<MuzzleFlash>();
 
         //msBetweenShots = 60000 / rpm;

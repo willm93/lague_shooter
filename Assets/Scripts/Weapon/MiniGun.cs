@@ -8,15 +8,10 @@ public class MiniGun : Gun
     WindingState currentWindingState;
 
     [Header("Wind Up Fire Effects")]
-    public Transform barrelRotary;
-    public float rotationSpeed = 666f;
-    public AudioClip windUpSound;
-    public AudioClip spinningSound;
-    public AudioClip fireContinuousSound;
+    [SerializeField] protected Transform barrelRotary;
+    [SerializeField] protected float rotationSpeed = 666f, windUpSpeed = 1f, windDownSpeed = 0.5f;
+    [SerializeField] protected AudioClip windUpSound, spinningSound, fireContinuousSound;
     float spinningStartTime;
-
-    public float windUpSpeed = 1f;
-    public float windDownSpeed = 0.5f;
     float windUpPercent = 0f;
 
     IEnumerator currentFiringRoutine;

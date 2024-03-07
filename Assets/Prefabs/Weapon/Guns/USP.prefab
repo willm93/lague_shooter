@@ -1244,7 +1244,7 @@ MonoBehaviour:
   rpm: 500
   muzzleVelocity: 20
   magSize: 12
-  reloadTime: 1.25
+  reloadTime: 1.5
   verticalRecoil: 0.1
   horizontalRecoil: 12
   vertRecoilRecoverTime: 0.1

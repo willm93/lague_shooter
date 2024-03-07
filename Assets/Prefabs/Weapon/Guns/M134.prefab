@@ -1641,18 +1641,18 @@ MonoBehaviour:
   rpm: 3480
   muzzleVelocity: 85
   magSize: 500
-  reloadTime: 3.3
+  reloadTime: 3
   verticalRecoil: 0.02
   horizontalRecoil: 2.5
   vertRecoilRecoverTime: 0.06
   horzRecoilRecoverTime: 0.1
   barrelRotary: {fileID: 3924849484491643368}
   rotationSpeed: 666
+  windUpSpeed: 1.2
+  windDownSpeed: 0.5
   windUpSound: {fileID: 8300000, guid: ad213d184fb649f4a90a1bcf6a00adb5, type: 3}
   spinningSound: {fileID: 8300000, guid: 2686087c2fe375741a1290b56ebf208c, type: 3}
   fireContinuousSound: {fileID: 8300000, guid: d7be27340771b3f4db75da876e5647b0, type: 3}
-  windUpSpeed: 1.2
-  windDownSpeed: 0.5
 --- !u!1 &8469439662428330684
 GameObject:
   m_ObjectHideFlags: 0

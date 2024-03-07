@@ -6,7 +6,7 @@ public class ABSGun : Gun
 {
     public enum FireMode {Auto, Burst, Single}
     public FireMode fireMode;
-    public int burstCount;
+    [SerializeField] protected int burstCount;
     
     IEnumerator currentFiringRoutine;
     public override void HoldTrigger()

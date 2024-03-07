@@ -51,7 +51,7 @@ public class GunController : MonoBehaviour
     {
         if (equippedGun != null && equippedGun.CanReload()){
             equippedGun.Reload();
-            OnReload?.Invoke(equippedGun.reloadTime);
+            OnReload?.Invoke(equippedGun.ReloadTime);
         }
     }
 

@@ -28,6 +28,7 @@ public class Crosshair : MonoBehaviour
     {
         StartCoroutine(OnReloadRoutine(reloadTime));
     }
+    
     IEnumerator OnReloadRoutine(float reloadTime)
     {
         spriteRenderer.sprite = reloadSprite;

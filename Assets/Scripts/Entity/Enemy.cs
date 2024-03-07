@@ -20,7 +20,6 @@ public class Enemy : LivingEntity
     public AudioClip deathSound;
     public static event Action OnDeathStatic;
     
-
     public int attackDamage = 5;
     public Color attackColor;
     public float attackDistance = 0.5f;

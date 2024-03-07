@@ -63,7 +63,7 @@ public class GameUI : MonoBehaviour
         stamBar.localScale = new Vector3(stamPercent, 1, 1);
 
         if (gunController != null){
-            ammoUI.text = gunController.equippedGun.nameOfGun + "\n" + gunController.equippedGun.GetBulletsRemaining() + " / " + gunController.equippedGun.GetMagSize();
+            ammoUI.text = $"{gunController.equippedGun.NameOfGun} \n{gunController.equippedGun.GetBulletsRemaining()} / {gunController.equippedGun.GetMagSize()}";
         }
 
     }

@@ -124,6 +124,7 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 384
+  penetrationCount: 2
 --- !u!96 &7167209471562095258
 TrailRenderer:
   serializedVersion: 3
