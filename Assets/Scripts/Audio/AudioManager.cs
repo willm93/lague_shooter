@@ -130,6 +130,7 @@ public class AudioManager : MonoBehaviour
             musicSources[1 - activeMusicSourceIndex].volume = Mathf.Lerp(musicVolume, 0, percent);
             yield return null;
         }
+        musicSources[1 - activeMusicSourceIndex].Stop();
     }
 
     IEnumerator ContinuousSoundFade(float fadeDuration)
