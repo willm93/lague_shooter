@@ -26,6 +26,8 @@ public class MapGenerator : MonoBehaviour
     Queue<MapCoordinate> shuffledTileCoords;
     Queue<MapCoordinate> shuffledOpenTileCoords;
 
+    public Dictionary<string, AudioClip> skyBoxLookup = new Dictionary<string, AudioClip>();
+
     void Start()
     {
         FindAnyObjectByType<EnemySpawner>().OnNewWave += OnNewWave;
@@ -42,6 +44,7 @@ public class MapGenerator : MonoBehaviour
         tileMap = new GameObject[currentMap.mapSize.x, currentMap.mapSize.y];
         System.Random prng = new System.Random(currentMap.seed);
         this.GetComponent<BoxCollider>().size = new Vector3(currentMap.mapSize.x * tileScale, 0.5f, currentMap.mapSize.y * tileScale);
+        RenderSettings.skybox = currentMap.skyboxMaterial;
 
         //delete previous map if present
         string holderName = "Generated Map";
@@ -215,6 +218,7 @@ public class MapGenerator : MonoBehaviour
     [System.Serializable]
     public class Map 
     {
+        public Material skyboxMaterial;
         public Vector2Int mapSize;
         public int seed;
         [Range(0,1)]

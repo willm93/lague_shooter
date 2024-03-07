@@ -49,12 +49,15 @@ public class MiniGun : Gun
         }
     }
 
+    public override bool CanReload()
+    {
+        return !triggerHeld && !isReloading;
+    }
+
     public override void Reload()
     {
-        if (!triggerHeld && !isReloading){
-            base.Reload();
-            StartCoroutine(ReloadRoutine());
-        }
+        base.Reload();
+        StartCoroutine(ReloadRoutine());
     }
 
     IEnumerator WindUpFire()

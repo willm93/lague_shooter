@@ -1,7 +1,8 @@
 
 public interface IFirearm
 {
-    public bool IsReloading {get;}
+    public bool CanReload {get;}
+    public float ReloadTime {get;}
     public void HoldTrigger();
     public void ReleaseTrigger();
     public void Reload();

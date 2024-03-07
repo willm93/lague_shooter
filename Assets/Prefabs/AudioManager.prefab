@@ -66,7 +66,7 @@ MonoBehaviour:
     theme: {fileID: 8300000, guid: 657c90d407de3ec458d20e77cf8d44e2, type: 3}
   - themeName: final_wave
     theme: {fileID: 8300000, guid: e4a3300d497e9394e8bb645bdfc24ebc, type: 3}
-  fadeDuration: 0.75
+  fadeDuration: 1
 --- !u!114 &7618937407245540801
 MonoBehaviour:
   m_ObjectHideFlags: 0

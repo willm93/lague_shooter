@@ -81,11 +81,6 @@ public class GameUI : MonoBehaviour
 
     void OnNewWave(int waveNumber)
     {
-        if (waveNumber == 4) {
-            RenderSettings.skybox = altSkybox;
-            GameObject.FindGameObjectWithTag("Directional Light").GetComponent<Light>().intensity = 2;
-        }
-
         newWaveTitle.SetText("Wave " + waveNumber);
         
         if (currentCoroutine != null){

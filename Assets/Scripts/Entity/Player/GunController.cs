@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class GunController : MonoBehaviour
     int currentGunIndex;
     int hiddenLayer;
     int defaultLayer;
+    public event Action<float> OnReload;
 
 
     void Start()
@@ -38,7 +40,7 @@ public class GunController : MonoBehaviour
 
     public void NextGun()
     {
-        if (!equippedGun.IsReloading && guns.Length > 0){
+        if (equippedGun.CanReload() && guns.Length > 0){
             currentGunIndex = (currentGunIndex + 1) % guns.Length;
             equippedGun.ReleaseTrigger();
             EquipGun(currentGunIndex);
@@ -47,8 +49,9 @@ public class GunController : MonoBehaviour
 
     public void Reload()
     {
-        if (equippedGun != null){
+        if (equippedGun != null && equippedGun.CanReload()){
             equippedGun.Reload();
+            OnReload?.Invoke(equippedGun.reloadTime);
         }
     }
 

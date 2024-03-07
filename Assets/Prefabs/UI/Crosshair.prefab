@@ -26,9 +26,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6225938391098444128}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -1, y: 0, z: -1}
-  m_LocalScale: {x: 0.63, y: 0.63, z: 0.63}
+  m_LocalScale: {x: 0.37941748, y: 0.3794175, z: 0.3794175}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7218067795332475343}
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!114 &5255377451848355956
 MonoBehaviour:
@@ -99,6 +99,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spinSpeed: 65
+  crosshairSprite: {fileID: 21300000, guid: b932e76b4878fad4a98dcb0c12494c15, type: 3}
+  reloadSprite: {fileID: 21300000, guid: f0655365fbd234c4eac6ba1d255e3334, type: 3}
+  maskingSpritePrefab: {fileID: 4871359727927333381, guid: 388caaabd730a7b479c5a1b5273aa07d, type: 3}
 --- !u!1 &8670931928649403357
 GameObject:
   m_ObjectHideFlags: 0

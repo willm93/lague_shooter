@@ -1826,15 +1826,15 @@ MonoBehaviour:
   ejector: {fileID: 9158453686862470572}
   projectilePrefab: {fileID: 539987400448958224, guid: b457a4594d524634a95d29af48475f05, type: 3}
   shellPrefab: {fileID: -6560197028754336745, guid: 05c0d738a76e48c449cf3a3a73d94eba, type: 3}
-  fireSound: {fileID: 8300000, guid: 74c4d88f6fd587141845e31ff95735b3, type: 3}
-  reloadSound: {fileID: 8300000, guid: 5d75b2ae83d541e4f88397377b7feb75, type: 3}
+  fireSound: {fileID: 8300000, guid: f4a4747a838876642a18cb16310ab409, type: 3}
+  reloadSound: {fileID: 8300000, guid: d2d60443e3ac54e4c868b8dd3c28a9d6, type: 3}
   emptyClick: {fileID: 8300000, guid: 69b8c116ebdb6a5408badb0528874b00, type: 3}
-  rpm: 800
+  rpm: 900
   muzzleVelocity: 85
   magSize: 30
-  reloadTime: 2
+  reloadTime: 1.1
   verticalRecoil: 0.12
-  horizontalRecoil: 3
+  horizontalRecoil: 1
   vertRecoilRecoverTime: 0.2
   horzRecoilRecoverTime: 0.1
   fireMode: 1

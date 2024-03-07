@@ -41,13 +41,16 @@ public class ABSGun : Gun
         AudioManager.instance.PlaySound(fireSound);
     }
 
+    public override bool CanReload()
+    {
+        return !isReloading;
+    }
+
     public override void Reload()
     {
-        if (!isReloading) {
-            base.ReleaseTrigger();
-            base.Reload();
-            StartCoroutine(ReloadRoutine());
-        }
+        base.ReleaseTrigger();
+        base.Reload();
+        StartCoroutine(ReloadRoutine());
     }
 
     IEnumerator AutomaticFire()

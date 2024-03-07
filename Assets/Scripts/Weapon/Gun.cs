@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent (typeof (MuzzleFlash))]
-public abstract class Gun : MonoBehaviour, IFirearm
+public abstract class Gun : MonoBehaviour
 {
     public string nameOfGun;
     public Transform[] projectileSpawns;
@@ -21,9 +21,9 @@ public abstract class Gun : MonoBehaviour, IFirearm
     public float muzzleVelocity = 35f;
     public int magSize = 1;
     protected int bulletsRemaining;
-    public float reloadTime = 0.5f;
+    public float reloadTime;
+    public float ReloadTime {get {return reloadTime;}}
     protected bool isReloading;
-    public bool IsReloading { get {return isReloading; } }
     protected bool triggerHeld;
 
     [Header("Recoil")]
@@ -64,6 +64,8 @@ public abstract class Gun : MonoBehaviour, IFirearm
     {
         isReloading = true;
     }
+
+    public abstract bool CanReload();
 
     public string GetNameOfGun()
     {
