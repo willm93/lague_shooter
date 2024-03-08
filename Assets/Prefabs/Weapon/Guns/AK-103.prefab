@@ -203,7 +203,7 @@ Transform:
   m_GameObject: {fileID: 1163079104735705292}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0206, z: 0.993}
+  m_LocalPosition: {x: 0, y: 0.035, z: 0.995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -764,8 +764,8 @@ Transform:
   m_GameObject: {fileID: 7644003636362898073}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0039044, z: -0.088049}
-  m_LocalScale: {x: 1.0354, y: 1.0354, z: 1.0354}
+  m_LocalPosition: {x: 0, y: 0.017401, z: -0.12279}
+  m_LocalScale: {x: 1.157603, y: 1.157603, z: 1.157603}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3899930671832281109}
@@ -1087,7 +1087,7 @@ MonoBehaviour:
   reloadSound: {fileID: 8300000, guid: 5d75b2ae83d541e4f88397377b7feb75, type: 3}
   emptyClick: {fileID: 8300000, guid: 69b8c116ebdb6a5408badb0528874b00, type: 3}
   rpm: 600
-  muzzleVelocity: 75
+  muzzleVelocity: 65
   magSize: 30
   reloadTime: 2
   verticalRecoil: 0.12
@@ -1226,7 +1226,7 @@ Transform:
   m_GameObject: {fileID: 9207857850878963864}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.025, z: 0.99}
+  m_LocalPosition: {x: 0, y: 0.025, z: 1.075}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

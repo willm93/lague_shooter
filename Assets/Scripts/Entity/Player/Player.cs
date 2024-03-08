@@ -31,10 +31,6 @@ public class Player : LivingEntity
         gunController = this.GetComponent<GunController>();
         gameCamera = Camera.main;
         groundPlane = new Plane(Vector3.up, Vector3.up * gunController.GunPosition().y);
-        EnemySpawner spawner = FindAnyObjectByType<EnemySpawner>();
-        if (spawner != null){
-            spawner.OnNewWave += OnNewWave;
-        }
     }
 
     void Update()
@@ -43,11 +39,6 @@ public class Player : LivingEntity
         crosshair.position = GetMousePoint() + gunOffsetFromPlayer;
         controller.Face(GetMousePoint() - this.transform.position);
         controller.SetVelocity(movementDirection, sprintAttempted);
-    }
-
-    void OnNewWave(int _i)
-    {
-        gunController.NextGun();
     }
 
     void OnEnable()

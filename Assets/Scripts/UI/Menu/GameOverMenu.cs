@@ -12,6 +12,7 @@ public class GameOverMenu : Menu
 
     public void Retry()
     {
+        Cursor.visible = false;
         SceneManager.LoadScene("GameScene");
     }
 
