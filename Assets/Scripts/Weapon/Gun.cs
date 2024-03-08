@@ -3,46 +3,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent (typeof (AudioSource))]
 [RequireComponent (typeof (MuzzleFlash))]
-public class Gun : MonoBehaviour, IFirearm
+public abstract class Gun : MonoBehaviour
 {
-    public String nameOfGun;
-    public Transform[] projectileSpawns;
-    public Transform ejector;
-    public Projectile projectilePrefab;
-    public Shell shellPrefab;
-    protected AudioSource audioSource;
+    [SerializeField] 
+    protected string nameOfGun; 
+    public string NameOfGun {get => nameOfGun;}
+
+    [SerializeField] protected Transform[] projectileSpawns;
+    [SerializeField] protected Transform ejector;
+    [SerializeField] protected Projectile projectilePrefab;
+    [SerializeField] protected Shell shellPrefab;
     protected MuzzleFlash muzzleFlash;
     
-    public AudioClip reloadSound;
-    public AudioClip emptyClick;
+    [SerializeField] protected AudioClip fireSound, reloadSound, emptyClick;
 
-    public float rpm = 400f;
+    [SerializeField] protected float rpm; 
     protected float secondsBetweenShots;
-    public float muzzleVelocity = 35f;
-    public int magSize = 1;
-    protected int bulletsRemaining;
-    public float reloadTime = 0.5f;
-    protected bool isReloading;
-    public bool IsReloading { get {return isReloading; } }
-    protected bool triggerHeld;
-    //public bool TriggerHeld() { return triggerHeld; }
 
-    [Header("Recoil")]
-    public float verticalRecoil = 0.2f;
-    public float horizontalRecoil = 2f;
-    protected Vector3 vertRecoilRecoverVelocity; 
-    public float vertRecoilRecoverTime = 0.1f;
-    protected float horzRecoilRecoverVelocity; 
-    public float horzRecoilRecoverTime = 0.1f;
+    [SerializeField] 
+    protected float muzzleVelocity; 
+    public float MuzzleVelocity {get => muzzleVelocity;}
+
+    [SerializeField] 
+    protected int magSize; 
+    public int MagSize {get => magSize;}
+
+    protected int bulletsRemaining;
+
+    [SerializeField] 
+    protected float reloadTime; 
+    public float ReloadTime {get => reloadTime;}
+
+    protected bool isReloading;
+    protected bool triggerHeld;
+    
+    [SerializeField] 
+    protected float verticalRecoil = 0.1f, 
+                    horizontalRecoil = 1f, 
+                    vertRecoilRecoverTime = 0.1f, 
+                    horzRecoilRecoverTime = 0.1f;
+    protected Vector3 vertRecoilRecoverVelocity;
+    protected float horzRecoilRecoverVelocity;
 
     protected Projectile newProjectile;
     protected Shell newShell;
 
     protected virtual void Start()
     {
-        audioSource = this.GetComponent<AudioSource>();
+        if (reloadTime <= 0){
+            throw new ArgumentOutOfRangeException($"reloadTime of {this.nameOfGun} cannot be <= 0");
+        }
+        
         muzzleFlash = this.GetComponent<MuzzleFlash>();
 
         //msBetweenShots = 60000 / rpm;
@@ -67,6 +79,23 @@ public class Gun : MonoBehaviour, IFirearm
     public virtual void Reload()
     {
         isReloading = true;
+    }
+
+    public abstract bool CanReload();
+
+    public string GetNameOfGun()
+    {
+        return nameOfGun;
+    }
+
+    public int GetBulletsRemaining()
+    {
+        return bulletsRemaining;
+    }
+
+    public int GetMagSize()
+    {
+        return magSize;
     }
 
     void RecoilRecovery()
@@ -97,7 +126,7 @@ public class Gun : MonoBehaviour, IFirearm
 
     protected IEnumerator ReloadRoutine()
     {
-        audioSource.PlayOneShot(reloadSound);
+        AudioManager.instance.PlaySound(reloadSound);
 
         float reloadPercent = 0;
         float interpolation;

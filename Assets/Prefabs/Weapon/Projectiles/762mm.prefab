@@ -120,10 +120,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 100
-  damage: 6
+  damage: 9
   collisionMask:
     serializedVersion: 2
     m_Bits: 384
+  penetrationCount: 2
 --- !u!96 &7167209471562095258
 TrailRenderer:
   serializedVersion: 3

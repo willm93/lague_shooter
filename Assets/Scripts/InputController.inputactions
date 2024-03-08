@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "79c07ebf-f84e-4f73-95dc-6e4d5bd6fcfb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -137,7 +146,7 @@
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "NextGun",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -148,8 +157,47 @@
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e7651ba2-6ccd-4700-a77e-230e5c1957ac",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "MnK",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "57c56247-8481-4af7-8863-e43642f1d0ad",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "cee61712-7d8f-4579-872a-258661947d01",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "472bdc4d-8f8c-415a-ae5f-6928d56e8fe7",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "MnK",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent( typeof(AudioSource))]
 public class EnemySpawner : MonoBehaviour
 {
     public bool devMode;
-    int waveSkipped = 0;
+    int waveSkipped = 1;
     public Enemy enemy;
     public float timeBetweenWaves = 5f;
     public Wave[] waves;
@@ -15,7 +13,6 @@ public class EnemySpawner : MonoBehaviour
     MapGenerator mapGen;  
     Player player;
     public event System.Action<int> OnNewWave;
-    AudioSource audioSource;
 
     //anti-camping technolgies
     public float campingCheckInterval = 4f;
@@ -28,15 +25,20 @@ public class EnemySpawner : MonoBehaviour
     void Start()
     {
         mapGen = FindAnyObjectByType<MapGenerator>();
-        audioSource = this.GetComponent<AudioSource>();
         player = FindAnyObjectByType<Player>();
         player.OnDeath += OnPlayerDeath;
+        Enemy.OnDeathStatic += OnEnemyDeath;
         oldPlayerPosition = player.transform.position;
 
         StartCoroutine(RunWaves());
         StartCoroutine(AntiCampingTechnology());
     }
 
+    void OnDestroy()
+    {
+        Enemy.OnDeathStatic -= OnEnemyDeath;
+    }
+    
     void Update()
     {
         if (devMode && Input.GetKeyDown(KeyCode.N)){
@@ -46,17 +48,19 @@ public class EnemySpawner : MonoBehaviour
 
     void SkipWave()
     {
-        StopAllCoroutines();
-        waveSkipped++;
-        waveSkipped = Mathf.Clamp(waveSkipped, 0, waves.Length - 1);
+        if (waveSkipped < waves.Length){
+            StopAllCoroutines();
 
-        foreach(Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None)){
-            Destroy(enemy.gameObject);
-            enemiesRemainingInWave--;
+            foreach(Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None)){
+                Destroy(enemy.gameObject);
+                enemiesRemainingInWave--;
+            }
+
+            StartCoroutine(RunWaves(waveSkipped));
+            StartCoroutine(AntiCampingTechnology());
+            waveSkipped++;
         }
-
-        StartCoroutine(RunWaves(waveSkipped));
-        StartCoroutine(AntiCampingTechnology());
+        
     }
 
     IEnumerator RunWaves(int startingWave = 0)
@@ -74,6 +78,7 @@ public class EnemySpawner : MonoBehaviour
             } while (waves[i].infinite);
             
             yield return WaitUntilEnemiesDie();
+            waveSkipped++;
             Debug.Log("Wave " + (i + 1) + " Complete");
             yield return new WaitForSeconds(timeBetweenWaves);
         }
@@ -106,8 +111,6 @@ public class EnemySpawner : MonoBehaviour
         tileMaterial.color = initialColor;
         Enemy newEnemy = Instantiate<Enemy>(enemy, spawnTile.transform.position + Vector3.up, Quaternion.identity, this.transform);
         newEnemy.SetCharacteristics(wave.enemySpeed, wave.enemyHealth, wave.attackDamage, wave.enemyColor, wave.attackColor);
-        newEnemy.OnDeath += OnEnemyDeath;
-        
         
     }
 
@@ -133,8 +136,7 @@ public class EnemySpawner : MonoBehaviour
 
     void OnEnemyDeath()
     {
-        enemiesRemainingInWave --;
-        audioSource.PlayOneShot(audioSource.clip);
+        enemiesRemainingInWave--;
     }
 
     void OnPlayerDeath()

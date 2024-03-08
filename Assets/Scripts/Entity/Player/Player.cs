@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,21 +8,24 @@ using UnityEngine.InputSystem;
 [RequireComponent ( typeof (GunController))]
 public class Player : LivingEntity
 {
-    InputController input;
+    public InputController input {get; private set;}
     PlayerController controller;
     GunController gunController;
     Camera gameCamera;
 
     public Transform crosshair;
-    public float moveSpeed = 5f;
     Vector3 movementDirection;
     Plane groundPlane;
     Vector3 mousePoint;
     Vector3 gunOffsetFromPlayer;
 
+    bool sprintAttempted = false;
+    public bool isPaused = false;
+    public event Action OnPause;
+    public event Action OnResume;
+
     void Awake()
     {
-        Cursor.visible = false;
         input = new InputController();
         controller = this.GetComponent<PlayerController>();
         gunController = this.GetComponent<GunController>();
@@ -38,7 +42,7 @@ public class Player : LivingEntity
         gunOffsetFromPlayer = gunController.GunPosition() - this.transform.position;
         crosshair.position = GetMousePoint() + gunOffsetFromPlayer;
         controller.Face(GetMousePoint() - this.transform.position);
-        controller.Move(movementDirection * moveSpeed);
+        controller.SetVelocity(movementDirection, sprintAttempted);
     }
 
     void OnNewWave(int _i)
@@ -52,12 +56,17 @@ public class Player : LivingEntity
         input.Player.Movement.performed += OnMovementPerformed;
         input.Player.Movement.canceled += OnMovementCanceled;
 
+        input.Player.Sprint.performed += OnSprintPerformed;
+        input.Player.Sprint.canceled += OnSprintCanceled;
+
         input.Player.Fire.performed += OnFirePerformed;
         input.Player.Fire.canceled += OnFireCanceled;
 
         input.Player.NextGun.performed += OnNextGunPerformed;
 
         input.Player.Reload.performed += OnReloadPerformed;
+
+        input.UI.Pause.performed += OnPausePerformed;
     }
 
     void OnDisable()
@@ -66,12 +75,17 @@ public class Player : LivingEntity
         input.Player.Movement.performed -= OnMovementPerformed;
         input.Player.Movement.canceled -= OnMovementCanceled;
 
+        input.Player.Sprint.performed -= OnSprintPerformed;
+        input.Player.Sprint.canceled -= OnSprintCanceled;
+
         input.Player.Fire.performed -= OnFirePerformed;
         input.Player.Fire.canceled -= OnFireCanceled;
 
         input.Player.NextGun.performed -= OnNextGunPerformed;
 
-        input.Player.Reload.performed += OnReloadPerformed;
+        input.Player.Reload.performed -= OnReloadPerformed;
+
+        input.UI.Pause.performed -= OnPausePerformed;
     }
 
     void OnMovementPerformed(InputAction.CallbackContext value)
@@ -82,6 +96,16 @@ public class Player : LivingEntity
     void OnMovementCanceled(InputAction.CallbackContext value)
     {
         movementDirection = Vector3.zero;
+    }
+
+    void OnSprintPerformed(InputAction.CallbackContext value)
+    {
+        sprintAttempted = true;
+    }
+
+    void OnSprintCanceled(InputAction.CallbackContext value)
+    {
+        sprintAttempted = false;
     }
 
     void OnFirePerformed(InputAction.CallbackContext value)
@@ -102,6 +126,28 @@ public class Player : LivingEntity
     void OnReloadPerformed(InputAction.CallbackContext value)
     {
         gunController.Reload();
+    }
+
+    void OnPausePerformed(InputAction.CallbackContext value)
+    {
+        isPaused = !isPaused;
+        if(isPaused){
+            input.Player.Disable();
+            Time.timeScale = 0;
+            OnPause?.Invoke();
+        } else {
+            input.Player.Enable();
+            Time.timeScale = 1;
+            OnResume?.Invoke();
+        }
+    }
+
+    public void ExternalUnpause() //from UI
+    {
+        isPaused = false;
+        input.Player.Enable();
+        Time.timeScale = 1;
+        OnResume?.Invoke();
     }
 
     Vector3 GetMousePoint()

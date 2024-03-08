@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2292861517180385228}
   m_Layer: 0
-  m_Name: weapon_hold_point
+  m_Name: Weapon Hold Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -183,6 +183,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad01442b9032784459ebeeefd413b946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 6.5
+  sprintSpeed: 9.5
+  maxStamina: 125
+  staminaUsageRate: 9
+  staminaRechargeRate: 5
+  staminaRechargeCooldown: 1
 --- !u!114 &17782831751975133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +203,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   crosshair: {fileID: 0}
-  moveSpeed: 7
 --- !u!114 &4964926659555914418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,10 +217,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponHoldPoint: {fileID: 2292861517180385228}
   guns:
+  - {fileID: 5202227945619902395, guid: 916e53180fe170d488a70402e2eed380, type: 3}
   - {fileID: 6327072435086393449, guid: 8a925de42c9f18f49ae41e40c598b7e5, type: 3}
   - {fileID: 6327072435086393449, guid: 2155fe2a30d3a4443b0b4e79132d6234, type: 3}
   - {fileID: 6327072435086393449, guid: 8dcb152c0e7de0b42a2bd0e9695e6715, type: 3}
-  - {fileID: 6327072435086393449, guid: 916e53180fe170d488a70402e2eed380, type: 3}
 --- !u!114 &159079688799852645
 MonoBehaviour:
   m_ObjectHideFlags: 0

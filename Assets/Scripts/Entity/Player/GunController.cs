@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,23 +6,24 @@ using UnityEngine;
 public class GunController : MonoBehaviour
 {
     public Transform weaponHoldPoint;
-    Gun equippedGun;
+    public Gun equippedGun {get; private set;}
     public Gun[] guns;
     int currentGunIndex;
     int hiddenLayer;
-    public int defaultLayer;
+    int defaultLayer;
+    public event Action<float> OnReload;
 
 
     void Start()
     {
         hiddenLayer = LayerMask.NameToLayer("Hidden");
         defaultLayer = LayerMask.NameToLayer("Default");
-
-        if (guns != null){
-            for(int i = 0; i < guns.Length; i++){
-                guns[i] = Instantiate<Gun>(guns[i], weaponHoldPoint.position, weaponHoldPoint.rotation, weaponHoldPoint);
-                ChangeLayer(guns[i], hiddenLayer);
-            }
+    
+        for(int i = 0; i < guns.Length; i++){
+            guns[i] = Instantiate<Gun>(guns[i], weaponHoldPoint.position, weaponHoldPoint.rotation, weaponHoldPoint);
+            ChangeLayer(guns[i], hiddenLayer);
+        }
+        if (guns.Length > 0){
             currentGunIndex = 0;
             EquipGun(currentGunIndex);
         }
@@ -38,7 +40,7 @@ public class GunController : MonoBehaviour
 
     public void NextGun()
     {
-        if (!equippedGun.IsReloading){
+        if (equippedGun.CanReload() && guns.Length > 0){
             currentGunIndex = (currentGunIndex + 1) % guns.Length;
             equippedGun.ReleaseTrigger();
             EquipGun(currentGunIndex);
@@ -47,8 +49,9 @@ public class GunController : MonoBehaviour
 
     public void Reload()
     {
-        if (equippedGun != null){
+        if (equippedGun != null && equippedGun.CanReload()){
             equippedGun.Reload();
+            OnReload?.Invoke(equippedGun.ReloadTime);
         }
     }
 
@@ -74,11 +77,10 @@ public class GunController : MonoBehaviour
     void ChangeLayer(Gun gun, int layer)
     {
         gun.gameObject.layer = layer;
-        foreach(Transform child in gun.transform){
+        Transform[] children = gun.GetComponentsInChildren<Transform>(includeInactive: true);
+        foreach (Transform child in children)
+        {
             child.gameObject.layer = layer;
-            foreach(Transform grandchild in child.transform){
-                grandchild.gameObject.layer = layer;
-            }
         }
     }
     

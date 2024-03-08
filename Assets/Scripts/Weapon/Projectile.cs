@@ -14,6 +14,10 @@ public class Projectile : MonoBehaviour
     RaycastHit hitInfo;
     public LayerMask collisionMask;
 
+    public int penetrationCount;
+    int currentPenCount = 0;
+    Collider previousCollider;
+
 
     void Start()
     {
@@ -43,9 +47,20 @@ public class Projectile : MonoBehaviour
     }
 
     void OnHitObject(Collider collider, Vector3 hitPoint){
-        IDamageable damageableObject = collider.GetComponent<IDamageable>();
-        damageableObject?.TakeHit(damage, hitPoint, transform.forward);
-        Destroy(this.gameObject);
+        if (collider != previousCollider){
+            IDamageable damageableObject = collider.GetComponent<IDamageable>();
+            damageableObject?.TakeHit(damage, hitPoint, transform.forward);
+            previousCollider = collider;
+
+            if(collider.CompareTag("Enemy")){
+                if (currentPenCount == penetrationCount){
+                    Destroy(this.gameObject);    
+                }
+                currentPenCount++;
+            } else {
+                Destroy(this.gameObject);
+            }
+        }
     }
 
     public void SetSpeed(float _speed)

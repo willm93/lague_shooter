@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -43,6 +42,7 @@ public class MapGenerator : MonoBehaviour
         tileMap = new GameObject[currentMap.mapSize.x, currentMap.mapSize.y];
         System.Random prng = new System.Random(currentMap.seed);
         this.GetComponent<BoxCollider>().size = new Vector3(currentMap.mapSize.x * tileScale, 0.5f, currentMap.mapSize.y * tileScale);
+        RenderSettings.skybox = currentMap.skyboxMaterial;
 
         //delete previous map if present
         string holderName = "Generated Map";
@@ -88,7 +88,7 @@ public class MapGenerator : MonoBehaviour
             if (!randomCoord.Equals(currentMap.MapCenter) && MapIsFullyAccessible(obstacleMap, currentObstacleCount)){
                 float obstacleHeight = Mathf.Lerp(currentMap.minObstacleHeight, currentMap.maxObstacleHeight, (float) prng.NextDouble());
                 GameObject newObstacle = Instantiate<GameObject>(obstaclePrefab, obstaclePosition + Vector3.up * obstacleHeight / 2, Quaternion.identity, mapHolder);
-                newObstacle.transform.localScale = (((1 - outlinePercent) * new Vector3(1, 0, 1)) + Vector3.up * obstacleHeight) * tileScale;
+                newObstacle.transform.localScale = (1 - outlinePercent) * new Vector3(1, 0, 1) * tileScale + (Vector3.up * obstacleHeight);
 
                 //change color
                 Renderer obstacleRenderer = newObstacle.GetComponent<Renderer>();
@@ -216,6 +216,7 @@ public class MapGenerator : MonoBehaviour
     [System.Serializable]
     public class Map 
     {
+        public Material skyboxMaterial;
         public Vector2Int mapSize;
         public int seed;
         [Range(0,1)]
