@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent( typeof(SoundLibrary))]
 public class AudioManager : MonoBehaviour
@@ -13,7 +14,6 @@ public class AudioManager : MonoBehaviour
     public float musicVolume {get; private set;}
 
     SoundLibrary soundLibrary;
-
     Transform audioListener;
 
     AudioSource[] musicSources;
@@ -21,6 +21,8 @@ public class AudioManager : MonoBehaviour
 
     AudioSource sfxSource;
     AudioSource contSfxSource;
+
+    Player player;
 
     void Awake()
     {
@@ -30,8 +32,10 @@ public class AudioManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this.gameObject);
 
+            SceneManager.sceneLoaded += OnSceneLoaded;
+
             soundLibrary = this.GetComponent<SoundLibrary>();
-            audioListener = this.transform.Find("Audio Listener").transform;
+            audioListener = this.transform.Find("Audio Listener").gameObject.transform;
             audioListener.position = Vector3.zero;
 
             masterVolume = PlayerPrefs.GetFloat("master_volume", 1);
@@ -43,6 +47,7 @@ public class AudioManager : MonoBehaviour
                 GameObject newMusicSource = new GameObject("Music Source " + (i + 1));
                 musicSources[i] = newMusicSource.AddComponent<AudioSource>();
                 musicSources[i].volume = musicVolume * masterVolume;
+                musicSources[i].ignoreListenerPause = true;
                 newMusicSource.transform.parent = this.transform;
             }
 
@@ -58,6 +63,25 @@ public class AudioManager : MonoBehaviour
             contSfxSource.transform.position = Vector3.zero;
             contSfxSource.transform.parent = this.transform;
         }
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        player = FindAnyObjectByType<Player>();
+        if (player != null){
+            player.OnPause += OnPause;
+            player.OnResume += OnResume;
+        }
+    }
+
+    void OnPause()
+    {
+        AudioListener.pause = true;
+    }
+
+    void OnResume()
+    {
+        AudioListener.pause = false;
     }
 
     public void SetVolume(float volume, AudioChannel channel)
