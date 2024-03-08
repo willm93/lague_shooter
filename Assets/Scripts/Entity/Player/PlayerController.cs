@@ -27,14 +27,14 @@ public class PlayerController : MonoBehaviour
     
     void FixedUpdate()
     {
-        myRigidbody.Move(myRigidbody.position + (velocity * Time.deltaTime), Quaternion.LookRotation(direction, Vector3.up));
+        myRigidbody.Move(myRigidbody.position + (velocity * Time.fixedDeltaTime), Quaternion.LookRotation(direction, Vector3.up));
     }
 
-    public void Move(Vector3 direction, bool sprintAttempted)
+    public void SetVelocity(Vector3 direction, bool sprintAttempted)
     {
         if (sprintAttempted && stamina > 0 && !staminaOnCooldown){
             isSprinting = true;
-            stamina -= staminaUsageRate * Time.fixedDeltaTime;
+            stamina -= staminaUsageRate * Time.deltaTime;
             velocity = direction * sprintSpeed;
         } else {
             isSprinting = false;
@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (!isSprinting && stamina < maxStamina){
-            stamina += staminaRechargeRate * Time.fixedDeltaTime;
+            stamina += staminaRechargeRate * Time.deltaTime;
         }
 
         if (stamina <= 0 && !staminaOnCooldown){

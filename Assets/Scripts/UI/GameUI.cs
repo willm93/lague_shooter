@@ -2,14 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.Android;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
-    public Image fadePlane;
-    public GameObject gameOverUI;
-    public Material altSkybox;
     Player player;
     PlayerController playerController;
     GunController gunController;
@@ -22,7 +20,6 @@ public class GameUI : MonoBehaviour
     IEnumerator currentCoroutine;
 
     public TextMeshProUGUI scoreUI;
-    public TextMeshProUGUI gameOverScoreUI;
     public RectTransform hpBar;
     float healthPercent = 1;
     float currentVelocity;
@@ -38,7 +35,7 @@ public class GameUI : MonoBehaviour
         player = FindObjectOfType<Player>();
         playerController = player.GetComponent<PlayerController>();
         gunController = player.GetComponent<GunController>();
-        player.OnDeath += OnGameOver;    
+        player.OnDeath += OnGameOver;
 
         EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
         if (spawner != null){
@@ -68,17 +65,6 @@ public class GameUI : MonoBehaviour
 
     }
 
-    void OnGameOver()
-    {
-        Cursor.visible = true;
-        StartCoroutine(Fade(Color.clear, new Color(0, 0, 0, 0.85f), 1));
-        scoreUI.gameObject.SetActive(false);
-        hpBar.transform.parent.gameObject.SetActive(false);
-
-        gameOverScoreUI.text = scoreUI.text;
-        gameOverUI.SetActive(true);
-    }
-
     void OnNewWave(int waveNumber)
     {
         newWaveTitle.SetText("Wave " + waveNumber);
@@ -89,6 +75,11 @@ public class GameUI : MonoBehaviour
         }
         currentCoroutine = AnimateNewWaveBanner();
         StartCoroutine(currentCoroutine);
+    }
+
+    void OnGameOver()
+    {
+        this.gameObject.SetActive(false);
     }
 
     IEnumerator AnimateNewWaveBanner()
@@ -111,30 +102,6 @@ public class GameUI : MonoBehaviour
             newWaveBanner.anchoredPosition = Vector2.Lerp(originalBannerPosition, bannerTargetPosition.anchoredPosition, percent);
             yield return null;
         }
-    }
-
-    IEnumerator Fade(Color from, Color to, float time)
-    {
-        float speed = 1 / time;
-        float percent = 0;
-
-        while(percent < 1){
-            percent += Time.deltaTime * speed;
-            fadePlane.color = Color.Lerp(from, to, percent);
-            yield return null;
-        }
-
-    }
-
-    //UI Input
-    public void StartNewGame()
-    {
-        SceneManager.LoadScene("GameScene");
-    }
-
-    public void BackToMenu()
-    {
-        SceneManager.LoadScene("MainMenu");
     }
 }
 

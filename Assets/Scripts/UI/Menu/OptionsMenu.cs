@@ -1,14 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Menu : MonoBehaviour
+public class OptionsMenu : Menu
 {
-    public GameObject mainMenuHolder;
-    public GameObject optionsMenuHolder;
+    public override string menuName {get; protected set;} = "options";
 
     public Slider[] volumeSliders;
     public Toggle fullscreen;
@@ -30,26 +29,13 @@ public class Menu : MonoBehaviour
         fullscreen.isOn = isFullscreen;
     }
 
-    public void Play()
-    {
-        SceneManager.LoadScene("GameScene");
-    }
-
-    public void Options()
-    {
-        mainMenuHolder.SetActive(false);
-        optionsMenuHolder.SetActive(true);
-    }
-
-    public void Quit()
-    {
-        Application.Quit();
-    }
-
     public void Back()
     {
-        optionsMenuHolder.SetActive(false);
-        mainMenuHolder.SetActive(true);
+        if (MenuManager.instance.menuLookup.ContainsKey(callingMenuName)){
+            MenuManager.instance.OpenMenu(callingMenuName, menuName);
+        } else {
+            throw new ArgumentNullException("No calling menu to return to");
+        }
     }
 
     public void SfxTest()

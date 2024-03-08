@@ -6,7 +6,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public enum AudioChannel {Master, Sfx, Music}
-    public static AudioManager instance;
+    public static AudioManager instance {get; private set;}
     
     public float masterVolume {get; private set;}
     public float sfxVolume {get; private set;}
@@ -126,8 +126,8 @@ public class AudioManager : MonoBehaviour
 
         while(percent < 1){
             percent += Time.deltaTime * (1 / fadeDuration);
-            musicSources[activeMusicSourceIndex].volume = Mathf.Lerp(0, musicVolume, percent);
-            musicSources[1 - activeMusicSourceIndex].volume = Mathf.Lerp(musicVolume, 0, percent);
+            musicSources[activeMusicSourceIndex].volume = Mathf.Lerp(0, musicVolume * masterVolume, percent);
+            musicSources[1 - activeMusicSourceIndex].volume = Mathf.Lerp(musicVolume * masterVolume, 0, percent);
             yield return null;
         }
         musicSources[1 - activeMusicSourceIndex].Stop();

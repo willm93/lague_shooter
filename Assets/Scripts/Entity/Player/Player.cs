@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine.InputSystem;
 [RequireComponent ( typeof (GunController))]
 public class Player : LivingEntity
 {
-    InputController input;
+    public InputController input {get; private set;}
     PlayerController controller;
     GunController gunController;
     Camera gameCamera;
@@ -19,10 +20,12 @@ public class Player : LivingEntity
     Vector3 gunOffsetFromPlayer;
 
     bool sprintAttempted = false;
+    public bool isPaused = false;
+    public event Action OnPause;
+    public event Action OnResume;
 
     void Awake()
     {
-        Cursor.visible = false;
         input = new InputController();
         controller = this.GetComponent<PlayerController>();
         gunController = this.GetComponent<GunController>();
@@ -39,7 +42,7 @@ public class Player : LivingEntity
         gunOffsetFromPlayer = gunController.GunPosition() - this.transform.position;
         crosshair.position = GetMousePoint() + gunOffsetFromPlayer;
         controller.Face(GetMousePoint() - this.transform.position);
-        controller.Move(movementDirection, sprintAttempted);
+        controller.SetVelocity(movementDirection, sprintAttempted);
     }
 
     void OnNewWave(int _i)
@@ -62,6 +65,8 @@ public class Player : LivingEntity
         input.Player.NextGun.performed += OnNextGunPerformed;
 
         input.Player.Reload.performed += OnReloadPerformed;
+
+        input.UI.Pause.performed += OnPausePerformed;
     }
 
     void OnDisable()
@@ -78,7 +83,9 @@ public class Player : LivingEntity
 
         input.Player.NextGun.performed -= OnNextGunPerformed;
 
-        input.Player.Reload.performed += OnReloadPerformed;
+        input.Player.Reload.performed -= OnReloadPerformed;
+
+        input.UI.Pause.performed -= OnPausePerformed;
     }
 
     void OnMovementPerformed(InputAction.CallbackContext value)
@@ -119,6 +126,28 @@ public class Player : LivingEntity
     void OnReloadPerformed(InputAction.CallbackContext value)
     {
         gunController.Reload();
+    }
+
+    void OnPausePerformed(InputAction.CallbackContext value)
+    {
+        isPaused = !isPaused;
+        if(isPaused){
+            input.Player.Disable();
+            Time.timeScale = 0;
+            OnPause?.Invoke();
+        } else {
+            input.Player.Enable();
+            Time.timeScale = 1;
+            OnResume?.Invoke();
+        }
+    }
+
+    public void ExternalUnpause() //from UI
+    {
+        isPaused = false;
+        input.Player.Enable();
+        Time.timeScale = 1;
+        OnResume?.Invoke();
     }
 
     Vector3 GetMousePoint()
