@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -50,7 +51,7 @@ public class Enemy : LivingEntity
         originalColor = myMaterial.color;
 
         targetEntity = GameObject.FindGameObjectWithTag("Player")?.GetComponent<LivingEntity>();
-        if(targetEntity != null){
+        if(targetEntity != null && FindAnyObjectByType<NavMeshSurface>() != null){
             target = targetEntity.transform;
             targetEntity.OnDeath += OnTargetDeath;
 

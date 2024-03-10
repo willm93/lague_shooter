@@ -6,8 +6,8 @@ using UnityEngine;
 public class GunController : MonoBehaviour
 {
     public Transform weaponHoldPoint;
-    public Gun equippedGun {get; private set;}
-    public Gun[] guns;
+    public IFirearm equippedGun {get; private set;}
+    public GameObject[] guns;
     int currentGunIndex;
     int hiddenLayer;
     int defaultLayer;
@@ -20,7 +20,7 @@ public class GunController : MonoBehaviour
         defaultLayer = LayerMask.NameToLayer("Default");
     
         for(int i = 0; i < guns.Length; i++){
-            guns[i] = Instantiate<Gun>(guns[i], weaponHoldPoint.position, weaponHoldPoint.rotation, weaponHoldPoint);
+            guns[i] = Instantiate(guns[i], weaponHoldPoint.position, weaponHoldPoint.rotation, weaponHoldPoint);
             ChangeLayer(guns[i], hiddenLayer);
         }
         if (guns.Length > 0){
@@ -32,10 +32,10 @@ public class GunController : MonoBehaviour
     public void EquipGun(int index)
     {
         if (equippedGun != null){
-            ChangeLayer(equippedGun, hiddenLayer);
+            ChangeLayer(((MonoBehaviour)equippedGun).gameObject, hiddenLayer);
         }
-        equippedGun = guns[index];
-        ChangeLayer(equippedGun, defaultLayer);
+        equippedGun = guns[index].GetComponent<IFirearm>();
+        ChangeLayer(((MonoBehaviour)equippedGun).gameObject, defaultLayer);
     }
 
     public void NextGun()
@@ -74,9 +74,9 @@ public class GunController : MonoBehaviour
         return weaponHoldPoint.position;
     }
 
-    void ChangeLayer(Gun gun, int layer)
+    void ChangeLayer(GameObject gun, int layer)
     {
-        gun.gameObject.layer = layer;
+        gun.layer = layer;
         Transform[] children = gun.GetComponentsInChildren<Transform>(includeInactive: true);
         foreach (Transform child in children)
         {

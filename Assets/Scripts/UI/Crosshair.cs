@@ -31,14 +31,16 @@ public class Crosshair : MonoBehaviour
     
     IEnumerator OnReloadRoutine(float reloadTime)
     {
-        spriteRenderer.sprite = reloadSprite;
+        if (reloadTime > 0.01f){
+            spriteRenderer.sprite = reloadSprite;
 
-        GameObject mask = Instantiate(maskingSpritePrefab, this.transform.position, Quaternion.Euler(new Vector3(90, 0, 0)), this.transform);
-        mask.GetComponent<CrosshairMask>().liftime = reloadTime;
-        mask = Instantiate(maskingSpritePrefab, this.transform.position, Quaternion.Euler(new Vector3(90, 180, 0)), this.transform);
-        mask.GetComponent<CrosshairMask>().liftime = reloadTime;
+            GameObject mask = Instantiate(maskingSpritePrefab, this.transform.position, Quaternion.Euler(new Vector3(90, 0, 0)), this.transform);
+            mask.GetComponent<CrosshairMask>().liftime = reloadTime;
+            mask = Instantiate(maskingSpritePrefab, this.transform.position, Quaternion.Euler(new Vector3(90, 180, 0)), this.transform);
+            mask.GetComponent<CrosshairMask>().liftime = reloadTime;
 
-        yield return new WaitForSeconds(reloadTime);
-        spriteRenderer.sprite = crosshairSprite;
+            yield return new WaitForSeconds(reloadTime);
+            spriteRenderer.sprite = crosshairSprite;
+        }
     }
 }

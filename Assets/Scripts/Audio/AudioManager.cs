@@ -130,13 +130,13 @@ public class AudioManager : MonoBehaviour
         sfxSource.PlayOneShot(soundLibrary.GetClipByName(name));
     }
 
-    public void PlayContinuousSound(AudioClip clip)
+    public void PlayContinuousSound(AudioClip clip, bool looping=true)
     {
         if (contSfxSource.isPlaying){
             contSfxSource.Stop();
         }
         contSfxSource.clip = clip;
-        contSfxSource.loop = true;
+        contSfxSource.loop = looping;
         contSfxSource.Play();
     }
 

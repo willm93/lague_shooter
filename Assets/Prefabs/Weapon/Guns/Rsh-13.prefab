@@ -997,7 +997,7 @@ MonoBehaviour:
   - {fileID: 7990787142421585172}
   ejector: {fileID: 9158453686862470572}
   projectilePrefab: {fileID: 876920627969828188, guid: 4e9fb1f2c502258478588c9d870cba8d, type: 3}
-  shellPrefab: {fileID: -6560197028754336745, guid: 8a2e8a5ad81e5c748b9ef0e5d447ed8c, type: 3}
+  shellPrefab: {fileID: 3685443895888004374, guid: 2b8c7b1219c59884dbf18f9d43df220b, type: 3}
   fireSound: {fileID: 8300000, guid: 2278a883603c53d42988646b9c88302f, type: 3}
   reloadSound: {fileID: 8300000, guid: df3848f60e430a9459f02d39f088d954, type: 3}
   emptyClick: {fileID: 8300000, guid: 69b8c116ebdb6a5408badb0528874b00, type: 3}

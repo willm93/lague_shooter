@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent (typeof (MuzzleFlash))]
-public abstract class Gun : MonoBehaviour
+public abstract class Gun : MonoBehaviour, IFirearm
 {
     [SerializeField] 
     protected string nameOfGun; 
@@ -26,9 +26,7 @@ public abstract class Gun : MonoBehaviour
     public float MuzzleVelocity {get => muzzleVelocity;}
 
     [SerializeField] 
-    protected int magSize; 
-    public int MagSize {get => magSize;}
-
+    protected int magSize;
     protected int bulletsRemaining;
 
     [SerializeField] 
@@ -82,21 +80,11 @@ public abstract class Gun : MonoBehaviour
     }
 
     public abstract bool CanReload();
-
-    public string GetNameOfGun()
+    public string DisplayAmmo()
     {
-        return nameOfGun;
+        return $"{bulletsRemaining} / {magSize}";
     }
-
-    public int GetBulletsRemaining()
-    {
-        return bulletsRemaining;
-    }
-
-    public int GetMagSize()
-    {
-        return magSize;
-    }
+    
 
     void RecoilRecovery()
     {
