@@ -26,7 +26,7 @@ public class Projectile : MonoBehaviour
         //if spawning inside a collider
         Collider[] initialColliders = Physics.OverlapSphere(this.transform.position, 0.1f, collisionMask);
         if (initialColliders.Length > 0){
-            OnHitObject(initialColliders[0], this.transform.position);
+            OnHitObject(initialColliders[0]);
         }
     }
     
@@ -42,14 +42,14 @@ public class Projectile : MonoBehaviour
         distanceRay.origin = transform.position;
         distanceRay.direction = transform.forward;
         if (Physics.Raycast(distanceRay, out hitInfo, distance + movingTargetCorrection, collisionMask, QueryTriggerInteraction.Collide)) {
-            OnHitObject(hitInfo.collider, hitInfo.point);
+            OnHitObject(hitInfo.collider);
         }
     }
 
-    void OnHitObject(Collider collider, Vector3 hitPoint){
+    void OnHitObject(Collider collider){
         if (collider != previousCollider){
             IDamageable damageableObject = collider.GetComponent<IDamageable>();
-            damageableObject?.TakeHit(damage, hitPoint, transform.forward);
+            damageableObject?.TakeHit(damage, transform.forward);
             previousCollider = collider;
 
             if(collider.CompareTag("Enemy")){

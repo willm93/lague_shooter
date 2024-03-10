@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LivingEntity : MonoBehaviour, IDamageable
@@ -15,7 +13,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
         dead = false;
     }
 
-    public virtual void TakeHit(int damage, Vector3 hitPoint, Vector3 hitDirection)
+    public virtual void TakeHit(int damage, Vector3 hitDirection)
     {
         TakeDamage(damage);
     }

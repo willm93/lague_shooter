@@ -39,9 +39,9 @@ public class GunController : MonoBehaviour
         equippedGun = guns[index].GetComponent<IFirearm>();
         ChangeLayer(((MonoBehaviour)equippedGun).gameObject, defaultLayer);
 
-        if (equippedGun.LimitsRotation){
-            equippedGun.OnFire += OnLimitRotation;
-            equippedGun.OnFireEnd += OnLimitRotationEnd;
+        if (equippedGun.EffectsPlayer){
+            equippedGun.OnFire += OnGunFire;
+            equippedGun.OnFireEnd += OnGunFireEnd;
         }
     }
 
@@ -76,12 +76,13 @@ public class GunController : MonoBehaviour
         }
     }
 
-    public void OnLimitRotation()
+    public void OnGunFire()
     {
         playerController.LimitRotation(true);
+        playerController.BigRecoil();
     }
 
-    public void OnLimitRotationEnd()
+    public void OnGunFireEnd()
     {
         playerController.LimitRotation(false);
     }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -94,17 +93,17 @@ public class Enemy : LivingEntity
         }
     }
 
-    public override void TakeHit(int damage, Vector3 hitPoint, Vector3 hitDirection)
+    public override void TakeHit(int damage, Vector3 hitDirection)
     {
         if (damage >= currentHealth && !deathEffectPlayed){            
             float effectLifetime = deathEffectPrefab.main.startLifetime.constant;
-            ParticleSystem deathEffect = Instantiate<ParticleSystem>(deathEffectPrefab, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection));
+            ParticleSystem deathEffect = Instantiate<ParticleSystem>(deathEffectPrefab, transform.position, Quaternion.FromToRotation(Vector3.forward, hitDirection));
             deathEffect.GetComponent<Renderer>().material.color = originalColor;
             deathEffect.Play();
             Destroy(deathEffect.gameObject, effectLifetime);
             deathEffectPlayed = true;
         }
-        base.TakeHit(damage, hitPoint, hitDirection);
+        base.TakeHit(damage, hitDirection);
     }
 
     void OnTargetDeath()

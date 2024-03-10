@@ -11,7 +11,7 @@ public interface IFirearm
     public void ReleaseTrigger();
     public void Reload();
 
-    public bool LimitsRotation {get;}
+    public bool EffectsPlayer {get;}
     public event Action OnFire;
     public event Action OnFireEnd;
 }

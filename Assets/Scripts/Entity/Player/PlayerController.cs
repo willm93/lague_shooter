@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rotationTime = 0.01f;
     [SerializeField] float limitedRotationTime = 0.45f;
     float initRotationTime;
+    public bool bigRecoil;
 
     Rigidbody myRigidbody;
     public float moveSpeed = 5f;
@@ -71,6 +72,11 @@ public class PlayerController : MonoBehaviour
         } else {
             rotationTime = initRotationTime;
         }
+    }
+    
+    public void BigRecoil()
+    {
+        myRigidbody.AddForce(-transform.forward * 4250f);
     }
 
     IEnumerator StaminaCooldown()

@@ -49,7 +49,7 @@ public abstract class Gun : MonoBehaviour, IFirearm
 
     public event Action OnFire;
     public event Action OnFireEnd;
-    public bool LimitsRotation { get => false;}
+    public bool EffectsPlayer { get => false; }
 
     protected virtual void Start()
     {

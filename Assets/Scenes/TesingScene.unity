@@ -608,7 +608,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4146273262731694729, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
       propertyPath: limitedRotationTime
-      value: 0.55
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4146273262731694729, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
       propertyPath: staminaRechargeCooldown

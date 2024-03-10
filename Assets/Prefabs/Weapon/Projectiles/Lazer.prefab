@@ -79,7 +79,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 50}
+  - {x: 0, y: 0, z: 25}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -177,10 +177,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 50
+  m_Radius: 0.25
+  m_Height: 25
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 25}
+  m_Center: {x: 0, y: 0, z: 12.5}
 --- !u!1 &3018709540676077542
 GameObject:
   m_ObjectHideFlags: 0

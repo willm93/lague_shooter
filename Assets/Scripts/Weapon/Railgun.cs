@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 public class Railgun : MonoBehaviour, IFirearm
 {
@@ -30,7 +28,7 @@ public class Railgun : MonoBehaviour, IFirearm
 
     public event Action OnFire;
     public event Action OnFireEnd;
-    public bool LimitsRotation { get => true; }
+    public bool EffectsPlayer { get => true; }
 
     public void Reload(){}
     public bool CanReload()
@@ -51,17 +49,16 @@ public class Railgun : MonoBehaviour, IFirearm
         }
     }
 
-    public void HoldTriggerTest()
+    public void HoldTriggerTest() //no charge version for testing
     {
         currentLazer = Instantiate(lazerPrefab, lazerHolder.position, lazerHolder.rotation, lazerHolder);
         currentLazer.GetComponent<Lazer>().initPoint = lazerHolder;
     }
 
-    public void ReleaseTriggerTest()
+    public void ReleaseTriggerTest() // no charge version for testing
     {
-        if (currentLazer != null){
-            Destroy(currentLazer);
-        }
+        Destroy(currentLazer);
+        currentLazer = null;
     }
 
     public void HoldTrigger()
