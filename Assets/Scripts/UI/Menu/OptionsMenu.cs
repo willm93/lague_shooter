@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,7 +38,7 @@ public class OptionsMenu : Menu
 
     public void SfxTest()
     {
-        AudioManager.instance.PlaySound("Test");
+        AudioManager.instance.PlayUnpausableSound("Test");
     }
 
     public void SetMasterVolume()

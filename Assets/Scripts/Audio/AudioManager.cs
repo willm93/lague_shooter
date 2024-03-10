@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,6 +20,7 @@ public class AudioManager : MonoBehaviour
 
     AudioSource sfxSource;
     AudioSource contSfxSource;
+    AudioSource unpausableSfxSource;
 
     Player player;
 
@@ -62,6 +62,13 @@ public class AudioManager : MonoBehaviour
             contSfxSource.volume = sfxVolume * masterVolume;
             contSfxSource.transform.position = Vector3.zero;
             contSfxSource.transform.parent = this.transform;
+
+            GameObject newUnpausableSfxSource = new GameObject("Continuous Sfx Sound Source ");
+            unpausableSfxSource = newUnpausableSfxSource.AddComponent<AudioSource>();
+            unpausableSfxSource.volume = sfxVolume * masterVolume;
+            unpausableSfxSource.ignoreListenerPause = true;
+            unpausableSfxSource.transform.position = Vector3.zero;
+            unpausableSfxSource.transform.parent = this.transform;
         }
     }
 
@@ -128,6 +135,15 @@ public class AudioManager : MonoBehaviour
     public void PlaySound(string name)
     {
         sfxSource.PlayOneShot(soundLibrary.GetClipByName(name));
+    }
+    public void PlayUnpausableSound(AudioClip clip)
+    {
+        unpausableSfxSource.PlayOneShot(clip);
+    }
+
+    public void PlayUnpausableSound(string name)
+    {
+        unpausableSfxSource.PlayOneShot(soundLibrary.GetClipByName(name));
     }
 
     public void PlayContinuousSound(AudioClip clip, bool looping=true)
