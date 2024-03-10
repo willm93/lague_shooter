@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,7 +27,10 @@ public class Railgun : MonoBehaviour, IFirearm
     float chargePercent = 0f;
     [SerializeField] float chargeTime = 1f;
     [SerializeField] float nextFireTime = 0f;
-    [SerializeField] float rechargeDelay = 0.1f;
+
+    public event Action OnFire;
+    public event Action OnFireEnd;
+    public bool LimitsRotation { get => true; }
 
     public void Reload(){}
     public bool CanReload()
@@ -42,6 +46,7 @@ public class Railgun : MonoBehaviour, IFirearm
     void Update()
     {
         if(Time.time > nextFireTime){
+            OnFireEnd?.Invoke();
             currentLazer = null;
         }
     }
@@ -89,6 +94,7 @@ public class Railgun : MonoBehaviour, IFirearm
             }
             
             if (chargePercent >= 1){
+                OnFire?.Invoke();
                 AudioManager.instance.PlaySound(fireSound);
                 FireLazer();
                 break;
@@ -102,6 +108,6 @@ public class Railgun : MonoBehaviour, IFirearm
         currentLazer = Instantiate(lazerPrefab, lazerHolder.position, lazerHolder.rotation, lazerHolder);
         currentLazer.GetComponent<Lazer>().initPoint = lazerHolder;
         currentLazer.GetComponent<Lazer>().lifetime = fireDuration;
-        nextFireTime = Time.time + fireDuration + rechargeDelay;
+        nextFireTime = Time.time + fireDuration;
     }
 }

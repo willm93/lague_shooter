@@ -7,6 +7,11 @@ public class PlayerController : MonoBehaviour
 {
     Vector3 velocity;
     Vector3 direction;
+    Vector3 directionVelocity;
+    [SerializeField] float rotationTime = 0.01f;
+    [SerializeField] float limitedRotationTime = 0.45f;
+    float initRotationTime;
+
     Rigidbody myRigidbody;
     public float moveSpeed = 5f;
     public float sprintSpeed = 8f;
@@ -16,6 +21,7 @@ public class PlayerController : MonoBehaviour
     public float staminaUsageRate = 10f;
     public float staminaRechargeRate = 5f;
     public float staminaRechargeCooldown = 2f;
+
     bool staminaOnCooldown;
     bool isSprinting;
     
@@ -23,6 +29,7 @@ public class PlayerController : MonoBehaviour
     {
         myRigidbody = this.GetComponent<Rigidbody>();
         stamina = maxStamina;
+        initRotationTime = rotationTime;
     }
     
     void FixedUpdate()
@@ -51,10 +58,19 @@ public class PlayerController : MonoBehaviour
         }            
     }
 
-    public void Face(Vector3 _direction)
+    public void SetDirection(Vector3 _direction)
     {
         _direction.y = 0;
-        direction = _direction;
+        direction = Vector3.SmoothDamp(transform.forward, _direction, ref directionVelocity, rotationTime);
+    }
+
+    public void LimitRotation(bool isOn)
+    {
+        if (isOn) {
+            rotationTime = limitedRotationTime;
+        } else {
+            rotationTime = initRotationTime;
+        }
     }
 
     IEnumerator StaminaCooldown()

@@ -47,6 +47,10 @@ public abstract class Gun : MonoBehaviour, IFirearm
     protected Projectile newProjectile;
     protected Shell newShell;
 
+    public event Action OnFire;
+    public event Action OnFireEnd;
+    public bool LimitsRotation { get => false;}
+
     protected virtual void Start()
     {
         if (reloadTime <= 0){

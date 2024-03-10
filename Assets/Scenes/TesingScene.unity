@@ -603,6 +603,14 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4146273262731694729, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
+      propertyPath: rotationTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146273262731694729, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
+      propertyPath: limitedRotationTime
+      value: 0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146273262731694729, guid: 5c3dc75621c002348a45ffa647255d2a, type: 3}
       propertyPath: staminaRechargeCooldown
       value: 2
       objectReference: {fileID: 0}

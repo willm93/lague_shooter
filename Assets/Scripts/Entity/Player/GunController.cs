@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GunController : MonoBehaviour
 {
+    PlayerController playerController;
     public Transform weaponHoldPoint;
     public IFirearm equippedGun {get; private set;}
     public GameObject[] guns;
@@ -18,6 +19,7 @@ public class GunController : MonoBehaviour
     {
         hiddenLayer = LayerMask.NameToLayer("Hidden");
         defaultLayer = LayerMask.NameToLayer("Default");
+        playerController = GetComponent<PlayerController>();
     
         for(int i = 0; i < guns.Length; i++){
             guns[i] = Instantiate(guns[i], weaponHoldPoint.position, weaponHoldPoint.rotation, weaponHoldPoint);
@@ -36,6 +38,11 @@ public class GunController : MonoBehaviour
         }
         equippedGun = guns[index].GetComponent<IFirearm>();
         ChangeLayer(((MonoBehaviour)equippedGun).gameObject, defaultLayer);
+
+        if (equippedGun.LimitsRotation){
+            equippedGun.OnFire += OnLimitRotation;
+            equippedGun.OnFireEnd += OnLimitRotationEnd;
+        }
     }
 
     public void NextGun()
@@ -67,6 +74,16 @@ public class GunController : MonoBehaviour
         if (equippedGun != null){
             equippedGun.ReleaseTrigger();
         }
+    }
+
+    public void OnLimitRotation()
+    {
+        playerController.LimitRotation(true);
+    }
+
+    public void OnLimitRotationEnd()
+    {
+        playerController.LimitRotation(false);
     }
 
     public Vector3 GunPosition()
