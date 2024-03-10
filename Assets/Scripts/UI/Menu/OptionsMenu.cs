@@ -24,6 +24,7 @@ public class OptionsMenu : Menu
         volumeSliders[2].value = AudioManager.instance.musicVolume;
 
         resolution.value = activeScreenResIndex;
+        resolution.interactable = !isFullscreen;
         fullscreen.isOn = isFullscreen;
     }
 
@@ -57,6 +58,7 @@ public class OptionsMenu : Menu
 
     public void SetScreenResolution()
     {
+        Debug.Log("Set Screen Resolution");
         float aspectRatio = 16/9f;
         activeScreenResIndex = resolution.value;
         Screen.SetResolution(screenWidths[activeScreenResIndex], (int) (screenWidths[activeScreenResIndex] / aspectRatio), false);
@@ -66,6 +68,7 @@ public class OptionsMenu : Menu
 
     public void SetFullscreen()
     {
+        Debug.Log("Set Full Screen");
         if (fullscreen.isOn){
             resolution.interactable = false;
             Resolution[] resolutions = Screen.resolutions;
