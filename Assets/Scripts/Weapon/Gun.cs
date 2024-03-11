@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent (typeof (MuzzleFlash))]
@@ -84,6 +83,7 @@ public abstract class Gun : MonoBehaviour, IFirearm
     }
 
     public abstract bool CanReload();
+    
     public string DisplayAmmo()
     {
         return $"{bulletsRemaining} / {magSize}";
@@ -92,8 +92,8 @@ public abstract class Gun : MonoBehaviour, IFirearm
 
     void RecoilRecovery()
     {
-        this.transform.localPosition = Vector3.SmoothDamp(this.transform.localPosition, Vector3.zero, ref vertRecoilRecoverVelocity, vertRecoilRecoverTime);
-        this.transform.localEulerAngles = Vector3.up * Mathf.SmoothDampAngle(this.transform.localEulerAngles.y, 0, ref horzRecoilRecoverVelocity, horzRecoilRecoverTime);
+        transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Vector3.zero, ref vertRecoilRecoverVelocity, vertRecoilRecoverTime);
+        transform.localEulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.localEulerAngles.y, 0, ref horzRecoilRecoverVelocity, horzRecoilRecoverTime);
     }
 
     protected virtual void FireProjectile()
@@ -116,7 +116,7 @@ public abstract class Gun : MonoBehaviour, IFirearm
         this.transform.localEulerAngles += Vector3.up * UnityEngine.Random.Range(-horizontalRecoil, horizontalRecoil);
     }
 
-    protected IEnumerator ReloadRoutine()
+    protected virtual IEnumerator ReloadRoutine()
     {
         AudioManager.instance.PlaySound(reloadSound);
 

@@ -33,9 +33,9 @@ public class Player : LivingEntity
 
     void Update()
     {
-        gunOffsetFromPlayer = gunController.GunPosition() - this.transform.position;
+        gunOffsetFromPlayer = gunController.GunPosition() - transform.position;
         crosshair.position = GetMousePoint() + gunOffsetFromPlayer;
-        controller.SetDirection(GetMousePoint() - this.transform.position);
+        controller.SetDirection(GetMousePoint() - transform.position);
         controller.SetVelocity(movementDirection, sprintAttempted);
     }
 

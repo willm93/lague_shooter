@@ -149,5 +149,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceMinMax: {x: 60, y: 90}
-  lifeTime: 1
+  lifeTime: 1.5
   initDirection: {x: 0, y: 0, z: 0}

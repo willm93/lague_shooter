@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class LivingEntity : MonoBehaviour, IDamageable
 {
-    public int maxHealth = 100;
+    [SerializeField] protected int maxHealth = 100;
+    public int MaxHealth {get => maxHealth;}
+
     public int currentHealth {get; protected set;}
     protected bool dead;
     public event System.Action OnDeath;

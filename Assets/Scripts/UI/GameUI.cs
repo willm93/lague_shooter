@@ -46,7 +46,7 @@ public class GameUI : MonoBehaviour
         scoreUI.text = "Kill Count: " + ScoreKeeper.score;
 
         if (player != null){
-            healthPercent = Mathf.SmoothDamp(healthPercent,  player.currentHealth / (float) player.maxHealth, ref currentVelocity, hpTransitionTime);
+            healthPercent = Mathf.SmoothDamp(healthPercent,  player.currentHealth / (float) player.MaxHealth, ref currentVelocity, hpTransitionTime);
         }
         hpBar.localScale = new Vector3(healthPercent, 1, 1);
 

@@ -13,6 +13,7 @@ public class GunController : MonoBehaviour
     int hiddenLayer;
     int defaultLayer;
     public event Action<float> OnReload;
+    bool subbedToGun = false;
 
 
     void Start()
@@ -35,13 +36,22 @@ public class GunController : MonoBehaviour
     {
         if (equippedGun != null){
             ChangeLayer(((MonoBehaviour)equippedGun).gameObject, hiddenLayer);
+
+            if(subbedToGun){
+                equippedGun.OnFire -= OnGunFire;
+                equippedGun.OnFireEnd -= OnGunFireEnd;
+                subbedToGun = false;
+            }
         }
+
+
         equippedGun = guns[index].GetComponent<IFirearm>();
         ChangeLayer(((MonoBehaviour)equippedGun).gameObject, defaultLayer);
 
         if (equippedGun.EffectsPlayer){
             equippedGun.OnFire += OnGunFire;
             equippedGun.OnFireEnd += OnGunFireEnd;
+            subbedToGun = true;
         }
     }
 
