@@ -29,9 +29,9 @@ public class MenuManager : MonoBehaviour
 
         player = FindAnyObjectByType<Player>();
         if (player != null){
-            player.OnPause += OnPause;
-            player.OnResume += OnResume;
             player.OnDeath += OnGameOver;
+            player.GetComponent<PlayerInput>().OnPause += OnPause;
+            player.GetComponent<PlayerInput>().OnResume += OnResume;
         } else {
             Cursor.visible = true;
         }

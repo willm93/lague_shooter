@@ -27,6 +27,7 @@ public abstract class Gun : MonoBehaviour, IFirearm
     [SerializeField] 
     protected int magSize;
     protected int bulletsRemaining;
+    protected bool infiniteAmmo = false;
 
     [SerializeField] 
     protected float reloadTime; 
@@ -53,10 +54,10 @@ public abstract class Gun : MonoBehaviour, IFirearm
     protected virtual void Start()
     {
         if (reloadTime <= 0){
-            throw new ArgumentOutOfRangeException($"reloadTime of {this.nameOfGun} cannot be <= 0");
+            throw new ArgumentOutOfRangeException($"reloadTime of {nameOfGun} cannot be <= 0");
         }
         
-        muzzleFlash = this.GetComponent<MuzzleFlash>();
+        muzzleFlash = GetComponent<MuzzleFlash>();
 
         //msBetweenShots = 60000 / rpm;
         secondsBetweenShots = 60f / rpm;
@@ -103,17 +104,19 @@ public abstract class Gun : MonoBehaviour, IFirearm
             newProjectile = Instantiate<Projectile>(projectilePrefab, pSpawn.position, pSpawn.rotation);
             newProjectile.SetSpeed(muzzleVelocity);
         }
-        bulletsRemaining--;
-
+        if(!infiniteAmmo){
+            bulletsRemaining--;
+        }
+            
         //projectile effects
         newShell = Instantiate<Shell>(shellPrefab, ejector.position, Quaternion.Euler(shellPrefab.transform.eulerAngles + ejector.eulerAngles));
-        newShell.initDirection = this.transform.right;
+        newShell.initDirection = transform.right;
 
         muzzleFlash.Activate();
 
         //recoil
-        this.transform.localPosition -= Vector3.forward * verticalRecoil;
-        this.transform.localEulerAngles += Vector3.up * UnityEngine.Random.Range(-horizontalRecoil, horizontalRecoil);
+        transform.localPosition -= Vector3.forward * verticalRecoil;
+        transform.localEulerAngles += Vector3.up * UnityEngine.Random.Range(-horizontalRecoil, horizontalRecoil);
     }
 
     protected virtual IEnumerator ReloadRoutine()
@@ -126,12 +129,17 @@ public abstract class Gun : MonoBehaviour, IFirearm
             //animate
             reloadPercent += Time.deltaTime * (1 / reloadTime);
             interpolation = (-Mathf.Pow(reloadPercent, 2) + reloadPercent) * 4; //quadratic function where f(x) goes from 0 > 1 > 0 as x goes from 0 > 1
-            this.transform.localEulerAngles = Vector3.right * Mathf.Lerp(0, -50, interpolation);
+            transform.localEulerAngles = Vector3.right * Mathf.Lerp(0, -50, interpolation);
 
             yield return null;
         }
 
         bulletsRemaining = magSize;
         isReloading = false;
+    }
+
+    public virtual void InfiniteAmmo(bool isOn)
+    {
+        infiniteAmmo = isOn;
     }
 }

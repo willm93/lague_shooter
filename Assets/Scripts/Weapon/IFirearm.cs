@@ -14,4 +14,6 @@ public interface IFirearm
     public bool EffectsPlayer {get;}
     public event Action OnFire;
     public event Action OnFireEnd;
+
+    public void InfiniteAmmo(bool isOn);
 }

@@ -7,21 +7,21 @@ public class PauseMenu : Menu
 {
     public override string menuName {get; protected set;} = "pause";
 
-    Player player;
+    PlayerInput playerInput;
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
+        playerInput = FindObjectOfType<PlayerInput>();
     }
    
     public void Resume()
     {
-        player.ExternalUnpause();
+        playerInput.ExternalUnpause();
     }
 
     public void Restart()
     {
-        player.ExternalUnpause();
+        playerInput.ExternalUnpause();
         SceneManager.LoadScene("GameScene");
     }
     
@@ -32,7 +32,7 @@ public class PauseMenu : Menu
 
     public void Menu()
     {
-        player.ExternalUnpause();
+        playerInput.ExternalUnpause();
         SceneManager.LoadScene("MainMenu");
     }
 }

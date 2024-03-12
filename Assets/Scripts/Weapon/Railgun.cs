@@ -29,6 +29,7 @@ public class Railgun : MonoBehaviour, IFirearm
     public event Action OnFire;
     public event Action OnFireEnd;
     public bool EffectsPlayer { get => true; }
+    bool infiniteAmmo = false;
 
     public void Reload(){}
     public bool CanReload()
@@ -49,21 +50,16 @@ public class Railgun : MonoBehaviour, IFirearm
         }
     }
 
-    public void HoldTriggerTest() //no charge version for testing
-    {
-        currentLazer = Instantiate(lazerPrefab, lazerHolder.position, lazerHolder.rotation, lazerHolder);
-        currentLazer.GetComponent<Lazer>().initPoint = lazerHolder;
-    }
-
-    public void ReleaseTriggerTest() // no charge version for testing
-    {
-        Destroy(currentLazer);
-        currentLazer = null;
-    }
-
     public void HoldTrigger()
     {
         triggerHeld = true;
+        
+        if(infiniteAmmo && currentFiringRoutine == null){
+            currentFiringRoutine = InstantFire();
+            StartCoroutine(currentFiringRoutine);
+            return;
+        }
+
         prefireEffect.Play();
 
         if (currentFiringRoutine == null && Time.time > nextFireTime){
@@ -100,11 +96,26 @@ public class Railgun : MonoBehaviour, IFirearm
         currentFiringRoutine = null;
     }
 
+    IEnumerator InstantFire()
+    {
+        OnFire?.Invoke();
+        AudioManager.instance.PlaySound(fireSound);
+        FireLazer();
+        yield return new WaitForSeconds(fireDuration);
+        OnFireEnd?.Invoke();
+        currentFiringRoutine = null;
+    }
+
     void FireLazer()
     {
         currentLazer = Instantiate(lazerPrefab, lazerHolder.position, lazerHolder.rotation, lazerHolder);
         currentLazer.GetComponent<Lazer>().initPoint = lazerHolder;
         currentLazer.GetComponent<Lazer>().lifetime = fireDuration;
         nextFireTime = Time.time + fireDuration;
+    }
+
+    public void InfiniteAmmo(bool isOn)
+    {
+        infiniteAmmo = isOn;
     }
 }

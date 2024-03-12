@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -26,9 +25,10 @@ public class MapGenerator : MonoBehaviour
     Queue<MapCoordinate> shuffledTileCoords;
     Queue<MapCoordinate> shuffledOpenTileCoords;
 
-    void Start()
+    void Awake()
     {
         FindAnyObjectByType<EnemySpawner>().OnNewWave += OnNewWave;
+        GenerateMap();
     }
 
     void OnNewWave(int waveNumber)
@@ -36,23 +36,24 @@ public class MapGenerator : MonoBehaviour
         mapIndex = waveNumber - 1;
         GenerateMap();
     }
+    
     public void GenerateMap()
     {
         currentMap = maps[mapIndex];
         tileMap = new GameObject[currentMap.mapSize.x, currentMap.mapSize.y];
         System.Random prng = new System.Random(currentMap.seed);
-        this.GetComponent<BoxCollider>().size = new Vector3(currentMap.mapSize.x * tileScale, 0.5f, currentMap.mapSize.y * tileScale);
+        GetComponent<BoxCollider>().size = new Vector3(currentMap.mapSize.x * tileScale, 0.5f, currentMap.mapSize.y * tileScale);
         RenderSettings.skybox = currentMap.skyboxMaterial;
 
         //delete previous map if present
         string holderName = "Generated Map";
-        if (this.transform.Find(holderName)){
-            DestroyImmediate(this.transform.Find(holderName).gameObject);
+        if (transform.Find(holderName)){
+            DestroyImmediate(transform.Find(holderName).gameObject);
         }
 
         //create new map
         Transform mapHolder = new GameObject(holderName).transform;
-        mapHolder.parent = this.transform;
+        mapHolder.parent = transform;
 
         for(int x = 0; x < currentMap.mapSize.x; x++){
             for(int y = 0; y < currentMap.mapSize.y; y++){

@@ -49,7 +49,9 @@ public class Revolver : Gun
             newProjectile.SetSpeed(muzzleVelocity);
         }
 
-        bulletsRemaining--;
+        if(!infiniteAmmo){
+            bulletsRemaining--;
+        }
         muzzleFlash.Activate();
 
         //recoil

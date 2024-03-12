@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -21,19 +20,22 @@ public class EnemySpawner : MonoBehaviour
     Vector3 oldPlayerPosition;
     bool isCamping;
 
-
-    void Start()
+    void Awake()
     {
         mapGen = FindAnyObjectByType<MapGenerator>();
         player = FindAnyObjectByType<Player>();
         player.OnDeath += OnPlayerDeath;
         Enemy.OnDeathStatic += OnEnemyDeath;
         oldPlayerPosition = player.transform.position;
+    }
+    
 
+    void Start()
+    {
         StartCoroutine(RunWaves());
         StartCoroutine(AntiCampingTechnology());
     }
-
+        
     void OnDestroy()
     {
         Enemy.OnDeathStatic -= OnEnemyDeath;
@@ -109,7 +111,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         tileMaterial.color = initialColor;
-        Enemy newEnemy = Instantiate<Enemy>(enemy, spawnTile.transform.position + Vector3.up, Quaternion.identity, this.transform);
+        Enemy newEnemy = Instantiate<Enemy>(enemy, spawnTile.transform.position + Vector3.up, Quaternion.identity, transform);
         newEnemy.SetCharacteristics(wave.enemySpeed, wave.enemyHealth, wave.attackDamage, wave.enemyColor, wave.attackColor);
         
     }

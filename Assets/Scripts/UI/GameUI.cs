@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameUI : MonoBehaviour
 {
     Player player;
-    PlayerController playerController;
     GunController gunController;
 
     public RectTransform newWaveBanner;
@@ -29,7 +28,6 @@ public class GameUI : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
-        playerController = player.GetComponent<PlayerController>();
         gunController = player.GetComponent<GunController>();
         player.OnDeath += OnGameOver;
 
@@ -50,8 +48,8 @@ public class GameUI : MonoBehaviour
         }
         hpBar.localScale = new Vector3(healthPercent, 1, 1);
 
-        if (playerController != null){
-            stamPercent = playerController.stamina / playerController.maxStamina;
+        if (player != null){
+            stamPercent = player.stamina / player.maxStamina;
         }
         stamBar.localScale = new Vector3(stamPercent, 1, 1);
 
@@ -75,7 +73,7 @@ public class GameUI : MonoBehaviour
 
     void OnGameOver()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     IEnumerator AnimateNewWaveBanner()

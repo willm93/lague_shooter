@@ -1642,8 +1642,8 @@ MonoBehaviour:
   muzzleVelocity: 85
   magSize: 500
   reloadTime: 3
-  verticalRecoil: 0.02
-  horizontalRecoil: 2.5
+  verticalRecoil: 0.04
+  horizontalRecoil: 2.7
   vertRecoilRecoverTime: 0.06
   horzRecoilRecoverTime: 0.1
   barrelRotary: {fileID: 3924849484491643368}

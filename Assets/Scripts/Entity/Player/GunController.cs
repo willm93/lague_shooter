@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GunController : MonoBehaviour
 {
-    PlayerController playerController;
+    Player player;
     public Transform weaponHoldPoint;
     public IFirearm equippedGun {get; private set;}
     public GameObject[] guns;
@@ -20,7 +18,7 @@ public class GunController : MonoBehaviour
     {
         hiddenLayer = LayerMask.NameToLayer("Hidden");
         defaultLayer = LayerMask.NameToLayer("Default");
-        playerController = GetComponent<PlayerController>();
+        player = GetComponent<Player>();
     
         for(int i = 0; i < guns.Length; i++){
             guns[i] = Instantiate(guns[i], weaponHoldPoint.position, weaponHoldPoint.rotation, weaponHoldPoint);
@@ -88,13 +86,20 @@ public class GunController : MonoBehaviour
 
     public void OnGunFire()
     {
-        playerController.LimitRotation(true);
-        playerController.BigRecoil();
+        player.LimitRotation(true);
+        player.BigRecoil();
     }
 
     public void OnGunFireEnd()
     {
-        playerController.LimitRotation(false);
+        player.LimitRotation(false);
+    }
+
+    public void InfiniteAmmo(bool isOn)
+    {
+        foreach(GameObject gun in guns){
+            gun.GetComponent<IFirearm>().InfiniteAmmo(isOn);
+        }
     }
 
     public Vector3 GunPosition()

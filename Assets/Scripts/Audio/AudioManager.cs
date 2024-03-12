@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
     AudioSource contSfxSource;
     AudioSource unpausableSfxSource;
 
-    Player player;
+    PlayerInput playerInput;
 
     void Awake()
     {
@@ -74,10 +74,10 @@ public class AudioManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        player = FindAnyObjectByType<Player>();
-        if (player != null){
-            player.OnPause += OnPause;
-            player.OnResume += OnResume;
+        playerInput = FindAnyObjectByType<PlayerInput>();
+        if (playerInput != null){
+            playerInput.OnPause += OnPause;
+            playerInput.OnResume += OnResume;
         }
     }
 
