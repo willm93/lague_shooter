@@ -3,19 +3,19 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public bool devMode;
+    [SerializeField] bool devMode;
     int waveSkipped = 1;
-    public Enemy enemy;
-    public float timeBetweenWaves = 5f;
-    public Wave[] waves;
+    [SerializeField] Enemy enemyPrefab;
+    [SerializeField] float timeBetweenWaves = 5f;
+    [SerializeField] EnemyWave[] waves;
     int enemiesRemainingInWave;
     MapGenerator mapGen;  
     Player player;
     public event System.Action<int> OnNewWave;
 
-    //anti-camping technolgies
-    public float campingCheckInterval = 4f;
-    public float thresholdDistanceSqr = 4f;
+    //anti-camping technologies
+    [SerializeField] float campingCheckInterval = 4f;
+    [SerializeField] float thresholdDistanceSqr = 4f;
     float distanceFromOldPosition;
     Vector3 oldPlayerPosition;
     bool isCamping;
@@ -86,7 +86,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnEnemy(Wave wave)
+    IEnumerator SpawnEnemy(EnemyWave wave)
     {
         float spawnDelay = 0.75f;
         float spawnTimer = 0;
@@ -111,9 +111,8 @@ public class EnemySpawner : MonoBehaviour
         }
 
         tileMaterial.color = initialColor;
-        Enemy newEnemy = Instantiate<Enemy>(enemy, spawnTile.transform.position + Vector3.up, Quaternion.identity, transform);
-        newEnemy.SetCharacteristics(wave.enemySpeed, wave.enemyHealth, wave.attackDamage, wave.enemyColor, wave.attackColor);
-        
+        Enemy newEnemy = Instantiate(enemyPrefab, spawnTile.transform.position + Vector3.up, Quaternion.identity, transform);
+        newEnemy.SetCharacteristics(wave);
     }
 
     IEnumerator AntiCampingTechnology()
@@ -153,18 +152,5 @@ public class EnemySpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(refreshRate);
         }
-    }
-
-    [System.Serializable]
-    public class Wave 
-    {
-        public bool infinite;
-        public int enemyCount;
-        public float timeBetweenSpawns;
-        public float enemySpeed;
-        public int attackDamage;
-        public int enemyHealth;
-        public Color enemyColor;
-        public Color attackColor;
     }
 }

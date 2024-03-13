@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5609206153398190175
+--- !u!1 &6525321268348735869
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3193423925270780672}
-  - component: {fileID: 603683317990777196}
-  - component: {fileID: 6579166076790920002}
-  - component: {fileID: 5780089363856735181}
-  - component: {fileID: -4192152399319998903}
-  m_Layer: 8
-  m_Name: Obstacle
-  m_TagString: Obstacle
+  - component: {fileID: 986120568000925961}
+  - component: {fileID: 4543828913555043191}
+  - component: {fileID: 7996813067938896210}
+  - component: {fileID: 78549430097893460}
+  - component: {fileID: 7139395131198461618}
+  m_Layer: 7
+  m_Name: Pounder
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3193423925270780672
+--- !u!4 &986120568000925961
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5609206153398190175}
+  m_GameObject: {fileID: 6525321268348735869}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &603683317990777196
+--- !u!33 &4543828913555043191
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5609206153398190175}
+  m_GameObject: {fileID: 6525321268348735869}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &6579166076790920002
+--- !u!23 &7996813067938896210
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5609206153398190175}
+  m_GameObject: {fileID: 6525321268348735869}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b3128b4deba15d341985851173633856, type: 2}
+  - {fileID: 2100000, guid: 72be08c6255da874e98905428ae8f8d3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -85,14 +85,14 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5780089363856735181
+--- !u!65 &78549430097893460
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5609206153398190175}
-  m_Material: {fileID: 13400000, guid: 8beb33c75fa96b9419f341056e27844c, type: 2}
+  m_GameObject: {fileID: 6525321268348735869}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -106,30 +106,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &-4192152399319998903
-Rigidbody:
+--- !u!114 &7139395131198461618
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5609206153398190175}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_GameObject: {fileID: 6525321268348735869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63e1411b5c5b3a34aafb13acdf08ae43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  attackSound: {fileID: 0}
+  deathSound: {fileID: 0}
+  deathEffectPrefab: {fileID: 5379222432297651181, guid: 3f35594a87e41f8499cc2da897fb1781, type: 3}
+  currentState: 0
+  eta: 2
+  attackDamage: 20
+  pounderWaveSpeed: 1
+  attackColor: {r: 0, g: 0, b: 0, a: 0}
+  pounderWavePrefab: {fileID: 2370816232017280294, guid: e36b4a6a209a65f49b1dd03f46a00f0b, type: 3}

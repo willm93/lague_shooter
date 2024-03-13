@@ -1,30 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
     public float speed = 100f;
     public int damage = 5;
-    float lifetime = 2f;
+    [SerializeField] float lifetime = 2f;
     float movingTargetCorrection = 0.1f;
 
     float moveDistance;
     Ray distanceRay;
     RaycastHit hitInfo;
-    public LayerMask collisionMask;
+    [SerializeField] LayerMask collisionMask;
 
     public int penetrationCount;
     int currentPenCount = 0;
     Collider previousCollider;
 
-
     void Start()
     {
-        Destroy(this.gameObject, lifetime);
+        Destroy(gameObject, lifetime);
 
         //if spawning inside a collider
-        Collider[] initialColliders = Physics.OverlapSphere(this.transform.position, 0.1f, collisionMask);
+        Collider[] initialColliders = Physics.OverlapSphere(transform.position, 0.1f, collisionMask);
         if (initialColliders.Length > 0){
             OnHitObject(initialColliders[0]);
         }
@@ -34,7 +31,7 @@ public class Projectile : MonoBehaviour
     {
         moveDistance = speed * Time.deltaTime;
         DetectCollision(moveDistance);
-        this.transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(Vector3.forward * moveDistance);
     }
 
     void DetectCollision(float distance)
@@ -52,13 +49,13 @@ public class Projectile : MonoBehaviour
             damageableObject?.TakeHit(damage, transform.forward);
             previousCollider = collider;
 
-            if(collider.CompareTag("Enemy")){
+            if(!collider.CompareTag("Obstacle")){
                 if (currentPenCount == penetrationCount){
-                    Destroy(this.gameObject);    
+                    Destroy(gameObject);    
                 }
                 currentPenCount++;
             } else {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             }
         }
     }

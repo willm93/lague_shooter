@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 539987400448958224}
   - component: {fileID: 7167209471562095258}
   m_Layer: 0
-  m_Name: 45 acp
+  m_Name: 12ga Buckshot
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,9 +28,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2389545044773143091}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.049544, y: 0.049544, z: 0.099088}
+  m_LocalScale: {x: 0.0364644, y: 0.0364644, z: 0.0364644}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 100
-  damage: 15
+  damage: 9
   lifetime: 2
   collisionMask:
     serializedVersion: 2

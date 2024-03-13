@@ -35,6 +35,7 @@ public class Player : LivingEntity
         myRigidbody = this.GetComponent<Rigidbody>();
         stamina = maxStamina;
         initRotationTime = rotationTime;
+        Cursor.visible = false;
     }
     
     void FixedUpdate()

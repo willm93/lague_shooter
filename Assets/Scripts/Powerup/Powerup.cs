@@ -9,9 +9,21 @@ public class Powerup : MonoBehaviour
     public float duration {get => effectDuration;}
     [SerializeField] AudioClip pickupSound;
 
+    Vector3 startingPosition;
+    Vector3 startingShellScale;
+    Transform shellTransform;
+
+    void Start()
+    {
+        startingPosition = transform.position;
+        shellTransform = transform.Find("Shell");
+        startingShellScale = shellTransform.localScale;
+    }
+
     void Update()
     {
-     //animate   
+        transform.position = Vector3.up * 0.1f * Mathf.Sin(Time.time) + startingPosition;
+        shellTransform.localScale = Vector3.one * 0.1f * Mathf.Sin(3 * Time.time) + startingShellScale;
     }
 
     void OnTriggerEnter(Collider collider)

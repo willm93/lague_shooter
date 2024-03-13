@@ -1942,7 +1942,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8842542620178592278, guid: 503ffe9df1ad13c4b9242a1dacc30cfd, type: 3}
       propertyPath: m_Name
-      value: Powerup
+      value: LifeOnKill
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

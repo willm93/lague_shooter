@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   devMode: 1
-  enemy: {fileID: 1603943563287253016, guid: 571949ae483248a4ea9fa286f5e09950, type: 3}
+  enemyPrefab: {fileID: 1603943563287253016, guid: 571949ae483248a4ea9fa286f5e09950, type: 3}
   timeBetweenWaves: 3
   waves:
   - infinite: 0

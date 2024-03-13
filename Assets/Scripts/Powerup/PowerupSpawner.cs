@@ -30,7 +30,7 @@ public class PowerupSpawner : MonoBehaviour
             yield return new WaitForSeconds(spawnInterval);
             GameObject spawnTile = mapGen.GetRandomOpenTile();
             Powerup randomPowerup = powerups[Random.Range(0, powerups.Length)];
-            Instantiate(randomPowerup, spawnTile.transform.position + Vector3.up * 0.6f, Quaternion.identity, transform);
+            Instantiate(randomPowerup, spawnTile.transform.position + Vector3.up, Quaternion.identity, transform);
         } 
         
     }
