@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class PowerupController : MonoBehaviour
     public bool lifeOnKill {get; private set;}
     public bool infiniteAmmo {get; private set;}
     public bool infinitStamina {get; private set;}
+    public event Action<Powerup.Variety, float> OnPowerup;
 
     Player player;
     GunController gunController;
@@ -21,12 +23,15 @@ public class PowerupController : MonoBehaviour
     {
         switch (kind){
             case Powerup.Variety.LifeOnKill:
+                OnPowerup?.Invoke(kind, duration);
                 StartCoroutine(LifeOnKillRoutine(duration));
                 break;
             case Powerup.Variety.InfiniteAmmo:
+                OnPowerup?.Invoke(kind, duration);
                 StartCoroutine(InfiniteAmmoRoutine(duration));
                 break;
             case Powerup.Variety.InfiniteStamina:
+                OnPowerup?.Invoke(kind, duration);
                 StartCoroutine(InfiniteStaminaRoutine(duration));
                 break;
         }
