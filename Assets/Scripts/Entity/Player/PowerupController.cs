@@ -53,7 +53,7 @@ public class PowerupController : MonoBehaviour
         player.InfiniteStamina(false);
     }
 
-    public void OnLifeOnKill()
+    public void OnLifeOnKill(bool notUsed)
     {
         if (lifeOnKill){
             player.Heal(5);

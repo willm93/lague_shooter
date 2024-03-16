@@ -7,6 +7,8 @@ using UnityEngine.AI;
 public class Chaser : Enemy
 {
     public override string Name {get => "Chaser";}
+    public override bool NeededForCount {get => true;}
+
     public enum State {Idle, Chasing, Attacking};
     [SerializeField] State currentState;
     IEnumerator currentRoutine;

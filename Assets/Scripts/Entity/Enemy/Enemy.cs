@@ -2,8 +2,9 @@ using UnityEngine;
 
 public abstract class Enemy : LivingEntity
 {
-    public static event System.Action OnDeathStatic;
+    public static event System.Action<bool> OnDeathStatic;
     public abstract string Name {get;}
+    public abstract bool NeededForCount {get;}
 
     [SerializeField] protected AudioClip attackSound;
     [SerializeField] protected AudioClip deathSound;
@@ -48,7 +49,7 @@ public abstract class Enemy : LivingEntity
         } else {
             AudioManager.instance.PlaySound("Enemy Death");
         }
-        OnDeathStatic?.Invoke();
+        OnDeathStatic?.Invoke(NeededForCount);
         base.Die();
     }
 }

@@ -55,11 +55,7 @@ public class EnemySpawner : MonoBehaviour
         {
             StopAllCoroutines();
 
-            foreach(Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
-            {
-                Destroy(enemy.gameObject);
-                enemiesRemainingInWave--;
-            }
+            DestroyRemainingEnemies();
 
             StartCoroutine(RunWaves(waveSkipped));
             StartCoroutine(AntiCampingTechnology());
@@ -67,6 +63,15 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    void DestroyRemainingEnemies()
+    {
+        foreach(Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+        {
+            Destroy(enemy.gameObject);
+            enemiesRemainingInWave--;
+        }
+    }
+        
     IEnumerator RunWaves(int startingWave = 0)
     {   
         for(int i = startingWave; i < waves.Length; i++)
@@ -87,6 +92,7 @@ public class EnemySpawner : MonoBehaviour
             waveSkipped++;
             Debug.Log("Wave " + (i + 1) + " Complete");
             yield return new WaitForSeconds(timeBetweenWaves);
+            DestroyRemainingEnemies();
         }
     }
 
@@ -113,7 +119,12 @@ public class EnemySpawner : MonoBehaviour
             }
             tileMaterial.color = initialColor;
 
-            Enemy enemyPrefab = Random.Range(1, 101) < wave.pounderSpawnChance ? pounderPrefab : chaserPrefab;
+            Enemy enemyPrefab = chaserPrefab;
+            if (Random.Range(1, 101) < wave.pounderSpawnChance)
+            {
+                enemyPrefab = pounderPrefab;
+                enemiesRemainingInWave--;
+            } 
 
             Enemy newEnemy = Instantiate(enemyPrefab, spawnTile.transform.position, Quaternion.identity, transform);
             newEnemy.gameObject.name = newEnemy.Name + $" {waveNumber}:{enemyNumber}";
@@ -166,9 +177,10 @@ public class EnemySpawner : MonoBehaviour
         player.transform.position = mapGen.GetTileNearPosition(Vector3.zero).transform.position + Vector3.up;
     }
 
-    void OnEnemyDeath()
+    void OnEnemyDeath(bool neededForCount)
     {
-        enemiesRemainingInWave--;
+        if (neededForCount)
+            enemiesRemainingInWave--;
     }
 
     void OnPlayerDeath()

@@ -11,6 +11,7 @@ public class PounderWave : MonoBehaviour
 
     void Start()
     {
+        FindAnyObjectByType<EnemySpawner>().OnNewWave += OnNewWave;
         StartCoroutine(CheckBounds());
     }
     
@@ -19,10 +20,20 @@ public class PounderWave : MonoBehaviour
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }
 
+    void OnNewWave(int notUsed)
+    {
+        StopAllCoroutines();
+        Destroy(gameObject);
+    }
+
     void OnTriggerEnter(Collider collider){
         IDamageable damageableObject = collider.GetComponent<IDamageable>();
         damageableObject?.TakeHit(damage, transform.forward);
         Destroy(gameObject);
+    }
+
+    void OnDestroy() {
+       FindAnyObjectByType<EnemySpawner>().OnNewWave -= OnNewWave;     
     }
 
     IEnumerator CheckBounds()

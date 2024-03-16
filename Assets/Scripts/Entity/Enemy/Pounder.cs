@@ -4,6 +4,7 @@ using UnityEngine;
 public class Pounder : Enemy
 {
     public override string Name {get => "Pounder";}
+    public override bool NeededForCount {get => false;}
     GameObject currentTile;
     GameObject targetTile;
 
