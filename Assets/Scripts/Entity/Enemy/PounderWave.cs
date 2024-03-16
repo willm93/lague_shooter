@@ -6,12 +6,17 @@ public class PounderWave : MonoBehaviour
 {
     public float speed = 1f;
     public int damage = 20;
+    int hitCount = 0;
     [SerializeField] LayerMask groundMask;
+    [SerializeField] EnemySpawner enemySpawner;
 
 
     void Start()
     {
-        FindAnyObjectByType<EnemySpawner>().OnNewWave += OnNewWave;
+        enemySpawner = FindAnyObjectByType<EnemySpawner>();
+        if(enemySpawner)
+            enemySpawner.OnNewWave += OnNewWave;
+            
         StartCoroutine(CheckBounds());
     }
     
@@ -26,14 +31,20 @@ public class PounderWave : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void OnTriggerEnter(Collider collider){
-        IDamageable damageableObject = collider.GetComponent<IDamageable>();
-        damageableObject?.TakeHit(damage, transform.forward);
+    void OnTriggerEnter(Collider collider)
+    {
+        if(!collider.CompareTag("Enemy"))
+        {
+            IDamageable damageableObject = collider.GetComponent<IDamageable>();
+            damageableObject?.TakeHit(damage, transform.forward);
+        }
         Destroy(gameObject);
     }
 
-    void OnDestroy() {
-       FindAnyObjectByType<EnemySpawner>().OnNewWave -= OnNewWave;     
+    void OnDestroy() 
+    {
+        if(enemySpawner)
+            enemySpawner.OnNewWave -= OnNewWave;
     }
 
     IEnumerator CheckBounds()

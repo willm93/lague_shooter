@@ -74,12 +74,6 @@ public class Pounder : Enemy
         currentState = State.Idle;
     }
 
-    /*private void OnTriggerEnter(Collider other) 
-    {
-        if (other.CompareTag("Enemy"))
-            Debug.Log($"{gameObject.name} touching {other.gameObject.name}");       
-    }*/
-
     IEnumerator Pound()
     {
         currentState = State.Pounding;
@@ -87,7 +81,6 @@ public class Pounder : Enemy
         Vector3 upPosition = transform.position + Vector3.up;
         Vector3 downPosition = transform.position;
         Vector3 direction;
-        PounderWave newpounderWave;
 
         while (Vector3.SqrMagnitude(upPosition - transform.position) > 0.001f)
         {
@@ -106,25 +99,37 @@ public class Pounder : Enemy
             yield return null;
         }
 
-        for(int i = 0; i < 4; i++)
-        {
-            Vector3 spawnPosition = new Vector3(
-                transform.position.x + transform.localScale.x * Mathf.Sin(Mathf.PI * 0.5f * i) * 0.5f, 
-                pounderWavePrefab.transform.localScale.y / 2, 
-                transform.position.z + transform.localScale.z * Mathf.Cos(Mathf.PI * 0.5f * i) * 0.5f
-            );
-            newpounderWave = Instantiate(pounderWavePrefab, spawnPosition, Quaternion.Euler(Vector3.up * 90 * i));
-            newpounderWave.transform.localScale = new Vector3(transform.localScale.x, newpounderWave.transform.localScale.y,newpounderWave.transform.localScale.z);
-            newpounderWave.damage = attackDamage;
-            newpounderWave.speed = pounderWaveSpeed;
-        }
-
+        SpawnPounderWaves();
+        
         myMaterial.color = originalColor;
         yield return new WaitForSeconds(2f);
 
         currentState = State.Idle;
         currentRoutine = null;
         pounded = true;
+    }
+
+    void SpawnPounderWaves()
+    {
+        PounderWave newpounderWave;
+        float waveHalfDepth = pounderWavePrefab.transform.localScale.z * 0.5f;
+        float safetyAdjustment = 0.1f;
+
+        for(int i = 0; i < 4; i++)
+        {
+            float xDirection = Mathf.Sin(Mathf.PI * 0.5f * i);
+            float zDirection = Mathf.Cos(Mathf.PI * 0.5f * i);
+
+            Vector3 spawnPosition = new Vector3(
+                transform.position.x + xDirection * (transform.localScale.x * 0.5f + waveHalfDepth + safetyAdjustment), 
+                pounderWavePrefab.transform.localScale.y / 2, 
+                transform.position.z + zDirection * (transform.localScale.z * 0.5f + waveHalfDepth + safetyAdjustment)
+            );
+            newpounderWave = Instantiate(pounderWavePrefab, spawnPosition, Quaternion.Euler(Vector3.up * 90 * i));
+            newpounderWave.transform.localScale = new Vector3(transform.localScale.x, newpounderWave.transform.localScale.y,newpounderWave.transform.localScale.z);
+            newpounderWave.damage = attackDamage;
+            newpounderWave.speed = pounderWaveSpeed;
+        }
     }
 
     IEnumerator Move()

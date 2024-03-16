@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2527428527376524560}
   - component: {fileID: 4462280813925871371}
   - component: {fileID: 1603943563287253016}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Chaser
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -144,13 +144,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 35
-  currentState: 0
+  attackSound: {fileID: 8300000, guid: b31debc4513a3774e91c6a0fdf141c5e, type: 3}
+  deathSound: {fileID: 0}
   deathEffectPrefab: {fileID: 5379222432297651181, guid: 3f35594a87e41f8499cc2da897fb1781, type: 3}
+  currentState: 0
   pathfinderSpeed: 8.7
   pathfinderAccel: 20
   pathfinderAngularSpeed: 60
-  attackSound: {fileID: 8300000, guid: b31debc4513a3774e91c6a0fdf141c5e, type: 3}
-  deathSound: {fileID: 0}
   attackDamage: 5
   attackColor: {r: 0, g: 0, b: 0, a: 0}
   attackDistance: 1.1

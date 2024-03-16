@@ -120,7 +120,7 @@ public class EnemySpawner : MonoBehaviour
             tileMaterial.color = initialColor;
 
             Enemy enemyPrefab = chaserPrefab;
-            if (Random.Range(1, 101) < wave.pounderSpawnChance)
+            if (Random.Range(1, 100) < wave.pounderSpawnChance)
             {
                 enemyPrefab = pounderPrefab;
                 enemiesRemainingInWave--;
