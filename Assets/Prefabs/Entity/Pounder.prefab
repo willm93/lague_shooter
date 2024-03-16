@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7996813067938896210}
   - component: {fileID: 78549430097893460}
   - component: {fileID: 7139395131198461618}
+  - component: {fileID: 1148818122551045742}
   m_Layer: 7
   m_Name: Pounder
   m_TagString: Enemy
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6525321268348735869}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.06, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -118,15 +119,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63e1411b5c5b3a34aafb13acdf08ae43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 450
+  maxHealth: 300
   attackSound: {fileID: 0}
   deathSound: {fileID: 0}
   deathEffectPrefab: {fileID: 5379222432297651181, guid: 3f35594a87e41f8499cc2da897fb1781, type: 3}
   currentState: 0
   moveTime: 0.75
-  healthMultiplier: 9
+  healthMultiplier: 3
   damageMultiplier: 3
   attackDamage: 5
   pounderWaveSpeed: 6
   attackColor: {r: 0, g: 0, b: 0, a: 0}
   pounderWavePrefab: {fileID: 2370816232017280294, guid: e36b4a6a209a65f49b1dd03f46a00f0b, type: 3}
+--- !u!208 &1148818122551045742
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6525321268348735869}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.2
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
