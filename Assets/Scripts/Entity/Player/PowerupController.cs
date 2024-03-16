@@ -19,7 +19,6 @@ public class PowerupController : MonoBehaviour
 
     public void PowerUp(Powerup.Variety kind, float duration)
     {
-        //Debug.Log("Power Up");
         switch (kind){
             case Powerup.Variety.LifeOnKill:
                 StartCoroutine(LifeOnKillRoutine(duration));
@@ -35,7 +34,6 @@ public class PowerupController : MonoBehaviour
 
     IEnumerator LifeOnKillRoutine(float duration)
     {
-        //Debug.Log("Life On Kill");
         lifeOnKill = true;
         yield return new WaitForSeconds(duration);
         lifeOnKill = false;
@@ -43,7 +41,6 @@ public class PowerupController : MonoBehaviour
 
     IEnumerator InfiniteAmmoRoutine(float duration)
     {
-        //Debug.Log("Infinite Ammo");
         gunController.InfiniteAmmo(true);
         yield return new WaitForSeconds(duration);
         gunController.InfiniteAmmo(false);
@@ -51,7 +48,6 @@ public class PowerupController : MonoBehaviour
 
     IEnumerator InfiniteStaminaRoutine(float duration)
     {
-        //Debug.Log("Infinite Stamina");
         player.InfiniteStamina(true);
         yield return new WaitForSeconds(duration);
         player.InfiniteStamina(false);
@@ -60,7 +56,6 @@ public class PowerupController : MonoBehaviour
     public void OnLifeOnKill()
     {
         if (lifeOnKill){
-            Debug.Log("Life On Kill");
             player.Heal(5);
         }
     }

@@ -22,7 +22,8 @@ public class Projectile : MonoBehaviour
 
         //if spawning inside a collider
         Collider[] initialColliders = Physics.OverlapSphere(transform.position, 0.1f, collisionMask);
-        if (initialColliders.Length > 0){
+        if (initialColliders.Length > 0)
+        {
             OnHitObject(initialColliders[0]);
         }
     }
@@ -44,13 +45,16 @@ public class Projectile : MonoBehaviour
     }
 
     void OnHitObject(Collider collider){
-        if (collider != previousCollider){
+        if (collider != previousCollider)
+        {
             IDamageable damageableObject = collider.GetComponent<IDamageable>();
             damageableObject?.TakeHit(damage, transform.forward);
             previousCollider = collider;
 
-            if(!collider.CompareTag("Obstacle")){
-                if (currentPenCount == penetrationCount){
+            if(!collider.CompareTag("Obstacle"))
+            {
+                if (currentPenCount == penetrationCount)
+                {
                     Destroy(gameObject);    
                 }
                 currentPenCount++;

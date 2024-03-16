@@ -104,7 +104,6 @@ public class Player : LivingEntity
     {
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        Debug.Log(Mathf.Clamp(currentHealth, 0, maxHealth));
     }
 
     public void InfiniteStamina(bool isOn)

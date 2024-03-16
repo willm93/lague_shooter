@@ -5,7 +5,8 @@ public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] bool devMode;
     int waveSkipped = 1;
-    [SerializeField] Enemy enemyPrefab;
+    [SerializeField] Enemy chaserPrefab;
+    [SerializeField] Enemy pounderPrefab;
     [SerializeField] float timeBetweenWaves = 5f;
     [SerializeField] EnemyWave[] waves;
     int enemiesRemainingInWave;
@@ -28,7 +29,6 @@ public class EnemySpawner : MonoBehaviour
         Enemy.OnDeathStatic += OnEnemyDeath;
         oldPlayerPosition = player.transform.position;
     }
-    
 
     void Start()
     {
@@ -43,17 +43,20 @@ public class EnemySpawner : MonoBehaviour
     
     void Update()
     {
-        if (devMode && Input.GetKeyDown(KeyCode.N)){
+        if (devMode && Input.GetKeyDown(KeyCode.N))
+        {
             SkipWave();
         }
     }
 
     void SkipWave()
     {
-        if (waveSkipped < waves.Length){
+        if (waveSkipped < waves.Length)
+        {
             StopAllCoroutines();
 
-            foreach(Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None)){
+            foreach(Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+            {
                 Destroy(enemy.gameObject);
                 enemiesRemainingInWave--;
             }
@@ -62,19 +65,20 @@ public class EnemySpawner : MonoBehaviour
             StartCoroutine(AntiCampingTechnology());
             waveSkipped++;
         }
-        
     }
 
     IEnumerator RunWaves(int startingWave = 0)
     {   
-        for(int i = startingWave; i < waves.Length; i++){
+        for(int i = startingWave; i < waves.Length; i++)
+        {
             OnNewWave?.Invoke(i + 1);
             enemiesRemainingInWave = waves[i].enemyCount;
             ResetPlayerPosition();
 
             do {
-                for(int n = 0; n < waves[i].enemyCount; n++){
-                    yield return SpawnEnemy(waves[i]);    
+                for(int n = 0; n < waves[i].enemyCount; n++)
+                {
+                    yield return SpawnEnemy(waves[i], i, n);    
                     yield return new WaitForSeconds(waves[i].timeBetweenSpawns);
                 }
             } while (waves[i].infinite);
@@ -86,33 +90,59 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnEnemy(EnemyWave wave)
+    IEnumerator SpawnEnemy(EnemyWave wave, int waveNumber, int enemyNumber)
     {
-        float spawnDelay = 0.75f;
-        float spawnTimer = 0;
-        float tileFlashSpeed = 4f;
-
-        GameObject spawnTile;
-        if (isCamping){
-            spawnTile = mapGen.GetTileNearPosition(player.transform.position);
-        } else {
-            spawnTile = mapGen.GetRandomOpenTile();
-        }
+        GameObject spawnTile = TryFindTile(25);
         
-        Material tileMaterial = spawnTile.GetComponent<Renderer>().material;
-        Color initialColor = tileMaterial.color;
-        Color newColor = wave.enemyColor;
+        if (spawnTile)
+        {
+            Material tileMaterial = spawnTile.GetComponent<Renderer>().material;
+            Color initialColor = tileMaterial.color;
+            Color newColor = wave.enemyColor;
+            
+            float spawnDelay = 0.5f;
+            float spawnTimer = 0;
+            float tileFlashSpeed = 5f;
 
-        while(spawnTimer < spawnDelay){
-            tileMaterial.color = Color.Lerp(initialColor, newColor, Mathf.PingPong(spawnTimer * tileFlashSpeed, 1));
+            while(spawnTimer < spawnDelay)
+            {
+                tileMaterial.color = Color.Lerp(initialColor, newColor, Mathf.PingPong(spawnTimer * tileFlashSpeed, 1));
 
-            spawnTimer += Time.deltaTime;
-            yield return null;
+                spawnTimer += Time.deltaTime;
+                yield return null;
+            }
+            tileMaterial.color = initialColor;
+
+            Enemy enemyPrefab = Random.Range(1, 101) < wave.pounderSpawnChance ? pounderPrefab : chaserPrefab;
+
+            Enemy newEnemy = Instantiate(enemyPrefab, spawnTile.transform.position, Quaternion.identity, transform);
+            newEnemy.gameObject.name = newEnemy.Name + $" {waveNumber}:{enemyNumber}";
+            newEnemy.SetCharacteristics(wave, spawnTile);    
+
+        } else 
+        {
+            Debug.LogError("Could not find valid spawn point for enemy. Enemy will not be spawned");
+        }
+    }
+
+    private GameObject TryFindTile(int tries)
+    {
+        GameObject tile = null;
+
+        if (isCamping)
+            tile = mapGen.ClaimTileNearPosition(player.transform.position);
+
+        if (tile) 
+            return tile;
+
+        for (int i = 0; i < tries; i++)
+        {
+            tile = mapGen.ClaimRandomOpenTile();
+            if (tile)
+                break;
         }
 
-        tileMaterial.color = initialColor;
-        Enemy newEnemy = Instantiate(enemyPrefab, spawnTile.transform.position + Vector3.up, Quaternion.identity, transform);
-        newEnemy.SetCharacteristics(wave);
+        return tile;
     }
 
     IEnumerator AntiCampingTechnology()
@@ -121,7 +151,8 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitForSeconds(campingCheckInterval);
 
             distanceFromOldPosition = Vector3.SqrMagnitude(player.transform.position - oldPlayerPosition);
-            if (distanceFromOldPosition < thresholdDistanceSqr){
+            if (distanceFromOldPosition < thresholdDistanceSqr)
+            {
                 isCamping = true;
             } else {
                 isCamping = false;

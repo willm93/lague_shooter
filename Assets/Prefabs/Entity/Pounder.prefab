@@ -118,13 +118,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63e1411b5c5b3a34aafb13acdf08ae43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 450
   attackSound: {fileID: 0}
   deathSound: {fileID: 0}
   deathEffectPrefab: {fileID: 5379222432297651181, guid: 3f35594a87e41f8499cc2da897fb1781, type: 3}
   currentState: 0
-  eta: 2
-  attackDamage: 20
-  pounderWaveSpeed: 1
+  moveTime: 0.75
+  healthMultiplier: 9
+  damageMultiplier: 3
+  attackDamage: 5
+  pounderWaveSpeed: 6
   attackColor: {r: 0, g: 0, b: 0, a: 0}
   pounderWavePrefab: {fileID: 2370816232017280294, guid: e36b4a6a209a65f49b1dd03f46a00f0b, type: 3}

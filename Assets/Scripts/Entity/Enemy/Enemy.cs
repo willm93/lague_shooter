@@ -3,21 +3,24 @@ using UnityEngine;
 public abstract class Enemy : LivingEntity
 {
     public static event System.Action OnDeathStatic;
+    public abstract string Name {get;}
 
     [SerializeField] protected AudioClip attackSound;
     [SerializeField] protected AudioClip deathSound;
     [SerializeField] protected ParticleSystem deathEffectPrefab;
     protected bool deathEffectPlayed = false;
 
+    protected MapGenerator mapGen;
     protected Material myMaterial;
     protected Color originalColor;
 
     protected virtual void Awake()
     {
         myMaterial = GetComponent<Renderer>().material;
+        mapGen = FindAnyObjectByType<MapGenerator>();
     }
 
-    public abstract void SetCharacteristics(EnemyWave wave);
+    public abstract void SetCharacteristics(EnemyWave wave, GameObject spawnTile);
 
     protected override void Start()
     {

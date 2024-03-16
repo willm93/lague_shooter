@@ -5,26 +5,21 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    public Map[] maps;
-    public int mapIndex;
+    [SerializeField] Map[] maps;
+    [SerializeField] int mapIndex;
     Map currentMap;
-    public Vector2Int maxMapSize;
-    GameObject[,] tileMap;
-    bool[,] obstacleMap;
 
-    public GameObject tilePrefab;
-    public GameObject obstaclePrefab;
-    public GameObject navMeshFloor;
-    public GameObject navMeshMaskPrefab;
+    [SerializeField] Vector2Int maxMapSize;
+    [SerializeField] GameObject tilePrefab;
+    [SerializeField] GameObject obstaclePrefab;
+    [SerializeField] GameObject navMeshFloor;
+    [SerializeField] GameObject navMeshMaskPrefab;
 
     [Range(0,1)]
     public float outlinePercent = 0f;
     [Range(0,6)]
-    public float tileScale;   
-
-    List<MapCoordinate> allTileCoords;
-    Queue<MapCoordinate> shuffledTileCoords;
-    Queue<MapCoordinate> shuffledOpenTileCoords;
+    [SerializeField] float tileScale; 
+    public float TileScale {get => tileScale;}
 
     void Awake()
     {
@@ -41,14 +36,16 @@ public class MapGenerator : MonoBehaviour
     public void GenerateMap()
     {
         currentMap = maps[mapIndex];
-        tileMap = new GameObject[currentMap.mapSize.x, currentMap.mapSize.y];
+        currentMap.tileMap = new GameObject[currentMap.mapSize.x, currentMap.mapSize.y];
+
         System.Random prng = new System.Random(currentMap.seed);
         GetComponent<BoxCollider>().size = new Vector3(currentMap.mapSize.x * tileScale, 0.5f, currentMap.mapSize.y * tileScale);
         RenderSettings.skybox = currentMap.skyboxMaterial;
 
         //delete previous map if present
         string holderName = "Generated Map";
-        if (transform.Find(holderName)){
+        if (transform.Find(holderName))
+        {
             DestroyImmediate(transform.Find(holderName).gameObject);
         }
 
@@ -56,38 +53,44 @@ public class MapGenerator : MonoBehaviour
         Transform mapHolder = new GameObject(holderName).transform;
         mapHolder.parent = transform;
 
-        for (int x = 0; x < currentMap.mapSize.x; x++){
-            for (int y = 0; y < currentMap.mapSize.y; y++){
+        for (int x = 0; x < currentMap.mapSize.x; x++)
+        {
+            for (int y = 0; y < currentMap.mapSize.y; y++)
+            {
                 Vector3 tilePosition = MapCoordToPosition(new MapCoordinate(x, y));
                 GameObject newTile = Instantiate(tilePrefab, tilePosition, Quaternion.Euler(Vector3.right * 90), mapHolder);
                 newTile.transform.localScale = (1 - outlinePercent) * tileScale * Vector3.one;
-                tileMap[x, y] = newTile;
+                currentMap.tileMap[x, y] = newTile;
             }
         }
 
         //create tile coordinates for obstacles
-        allTileCoords = new List<MapCoordinate>();
-        for (int x = 0; x < currentMap.mapSize.x; x++){
-            for (int y = 0; y < currentMap.mapSize.y; y++){
-                allTileCoords.Add(new MapCoordinate(x, y));
+        currentMap.allCoordinates = new List<MapCoordinate>();
+        for (int x = 0; x < currentMap.mapSize.x; x++)
+        {
+            for (int y = 0; y < currentMap.mapSize.y; y++)
+            {
+                currentMap.allCoordinates.Add(new MapCoordinate(x, y));
             }
         }
-        shuffledTileCoords = new Queue<MapCoordinate>(Utility.ShuffleArray(allTileCoords.ToArray(), currentMap.seed));
+        currentMap.shuffledCoordinates = new Queue<MapCoordinate>(Utility.ShuffleArray(currentMap.allCoordinates.ToArray(), currentMap.seed));
 
         //create obstacles
-        obstacleMap = new bool[currentMap.mapSize.x, currentMap.mapSize.y]; 
+        currentMap.obstacleMap = new bool[currentMap.mapSize.x, currentMap.mapSize.y]; 
         int obstacleCount = Mathf.RoundToInt(currentMap.mapSize.x * currentMap.mapSize.y * currentMap.obstaclePercent);
         int currentObstacleCount = 0;
-        List<MapCoordinate> allOpenTileCoords = new List<MapCoordinate>(allTileCoords);
+        currentMap.allOpenCoordinates = new List<MapCoordinate>(currentMap.allCoordinates);
 
-        for (int i = 0; i < obstacleCount - 1; i++){
+        for (int i = 0; i < obstacleCount - 1; i++)
+        {
             MapCoordinate randomCoord = GetRandomMapCoordinate();
             Vector3 obstaclePosition = MapCoordToPosition(randomCoord);
 
-            obstacleMap[randomCoord.x, randomCoord.y] = true;
+            currentMap.obstacleMap[randomCoord.x, randomCoord.y] = true;
             currentObstacleCount++;
 
-            if (!randomCoord.Equals(currentMap.MapCenter) && MapIsFullyAccessible(obstacleMap, currentObstacleCount)){
+            if (!randomCoord.Equals(currentMap.MapCenter) && MapIsFullyAccessible(currentObstacleCount))
+            {
                 float obstacleHeight = Mathf.Lerp(currentMap.minObstacleHeight, currentMap.maxObstacleHeight, (float) prng.NextDouble());
                 GameObject newObstacle = Instantiate(obstaclePrefab, obstaclePosition + Vector3.up * obstacleHeight / 2, Quaternion.identity, mapHolder);
                 newObstacle.transform.localScale = (1 - outlinePercent) * new Vector3(1, 0, 1) * tileScale + (Vector3.up * obstacleHeight);
@@ -99,13 +102,14 @@ public class MapGenerator : MonoBehaviour
                 obstacleMaterial.color = Color.Lerp(currentMap.foregroundColor, currentMap.backgroundColor, colorPercent);
                 obstacleRenderer.sharedMaterial = obstacleMaterial;
 
-                allOpenTileCoords.Remove(randomCoord);
+                currentMap.allOpenCoordinates.Remove(randomCoord);
             } else {
-                obstacleMap[randomCoord.x, randomCoord.y] = false;
+                currentMap.obstacleMap[randomCoord.x, randomCoord.y] = false;
                 currentObstacleCount--;
             }
         }
-        shuffledOpenTileCoords = new Queue<MapCoordinate>(Utility.ShuffleArray(allOpenTileCoords.ToArray(), currentMap.seed));
+        currentMap.unclaimedCoordinates = currentMap.allOpenCoordinates;
+        currentMap.shuffledOpenCoordinates = new Queue<MapCoordinate>(Utility.ShuffleArray(currentMap.allOpenCoordinates.ToArray(), currentMap.seed));
 
         //block edges for navmesh
         GameObject leftNavMask = Instantiate(navMeshMaskPrefab, Vector3.left * (maxMapSize.x + currentMap.mapSize.x) / 4f * tileScale, Quaternion.identity, mapHolder);
@@ -124,7 +128,7 @@ public class MapGenerator : MonoBehaviour
         navMeshFloor.GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
-    bool MapIsFullyAccessible(bool[,] obstacleMap, int currentObstacleCount)
+    private bool MapIsFullyAccessible(int currentObstacleCount)
     {
         bool[,] checkedTiles = new bool[currentMap.mapSize.x, currentMap.mapSize.y];
         Queue<MapCoordinate> queue = new Queue<MapCoordinate>();
@@ -133,30 +137,32 @@ public class MapGenerator : MonoBehaviour
 
         int accesibleTileCount = 1;
 
-        bool tileInMap;
-        bool tileNotObstacle = false;
-        bool tileUnchecked = false;
+        bool coordinateInMap;
+        bool coordinateNotObstacle = false;
+        bool coordinateUnchecked = false;
 
         while (queue.Count > 0){
-            MapCoordinate tile = queue.Dequeue();
+            MapCoordinate coordinate = queue.Dequeue();
 
-            MapCoordinate[] adjacentTiles = new MapCoordinate[4];    
-            adjacentTiles[0] = new MapCoordinate(tile.x + 1, tile.y);
-            adjacentTiles[1] = new MapCoordinate(tile.x - 1, tile.y);
-            adjacentTiles[2] = new MapCoordinate(tile.x, tile.y + 1);
-            adjacentTiles[3] = new MapCoordinate(tile.x, tile.y - 1);
+            MapCoordinate[] adjacentCoordinates = new MapCoordinate[4];    
+            adjacentCoordinates[0] = new MapCoordinate(coordinate.x + 1, coordinate.y);
+            adjacentCoordinates[1] = new MapCoordinate(coordinate.x - 1, coordinate.y);
+            adjacentCoordinates[2] = new MapCoordinate(coordinate.x, coordinate.y + 1);
+            adjacentCoordinates[3] = new MapCoordinate(coordinate.x, coordinate.y - 1);
 
-            foreach(MapCoordinate adjacentTile in adjacentTiles){
-                tileInMap = adjacentTile.x >= 0 && adjacentTile.y >= 0 && adjacentTile.x < currentMap.mapSize.x && adjacentTile.y < currentMap.mapSize.y;
-                if (tileInMap){
-                    tileNotObstacle = !obstacleMap[adjacentTile.x, adjacentTile.y];
-                    tileUnchecked = !checkedTiles[adjacentTile.x, adjacentTile.y];
+            foreach(MapCoordinate adjacentCoordinate in adjacentCoordinates)
+            {
+                coordinateInMap = currentMap.ContainsCoordinate(adjacentCoordinate);
+                if (coordinateInMap)
+                {
+                    coordinateNotObstacle = !currentMap.obstacleMap[adjacentCoordinate.x, adjacentCoordinate.y];
+                    coordinateUnchecked = !checkedTiles[adjacentCoordinate.x, adjacentCoordinate.y];
                 }
                 
-                if (tileInMap && tileUnchecked && tileNotObstacle)
+                if (coordinateInMap && coordinateUnchecked && coordinateNotObstacle)
                 {
-                    checkedTiles[adjacentTile.x, adjacentTile.y] = true;
-                    queue.Enqueue(adjacentTile);
+                    checkedTiles[adjacentCoordinate.x, adjacentCoordinate.y] = true;
+                    queue.Enqueue(adjacentCoordinate);
                     accesibleTileCount++;
                 }
             }
@@ -166,86 +172,127 @@ public class MapGenerator : MonoBehaviour
         return targetAccessibleTileCount == accesibleTileCount;
     }
 
-    public MapCoordinate GetRandomMapCoordinate()
+    private MapCoordinate GetRandomMapCoordinate()
     {
-        MapCoordinate randomCoord = shuffledTileCoords.Dequeue();
-        shuffledTileCoords.Enqueue(randomCoord);
-
-        return randomCoord;
-    }
-
-    public MapCoordinate GetRandomOpenMapCoordinate()
-    {
-        MapCoordinate randomCoord = shuffledOpenTileCoords.Dequeue();
-        shuffledOpenTileCoords.Enqueue(randomCoord);
+        MapCoordinate randomCoord = currentMap.shuffledCoordinates.Dequeue();
+        currentMap.shuffledCoordinates.Enqueue(randomCoord);
 
         return randomCoord;
     }
 
     public GameObject GetRandomOpenTile(){
         MapCoordinate randomOpenCoord = GetRandomMapCoordinate();
-        return tileMap[randomOpenCoord.x, randomOpenCoord.y];
+        return currentMap.tileMap[randomOpenCoord.x, randomOpenCoord.y];
     }
 
-    public Vector3 MapCoordToPosition(MapCoordinate mapCoord)
+    private Vector3 MapCoordToPosition(MapCoordinate coordinate)
     {
-        return new Vector3(-currentMap.mapSize.x / 2f + 0.5f + mapCoord.x, 0, -currentMap.mapSize.y / 2f + 0.5f + mapCoord.y) * tileScale;
+        float x = (-currentMap.mapSize.x / 2f + 0.5f + coordinate.x) * tileScale;
+        float z = (-currentMap.mapSize.y / 2f + 0.5f + coordinate.y) * tileScale;
+        return new Vector3(x, 0, z);
+    }
+
+    private GameObject MapCoordToTile(MapCoordinate coordinate)
+    {
+        if (currentMap.ContainsCoordinate(coordinate))
+        {
+            return currentMap.tileMap[coordinate.x, coordinate.y];
+        } 
+        return null;
     }
 
     public GameObject GetTileNearPosition(Vector3 position)
     {
         //formula for x? given position
-        //position.x = (-currentMap.mapSize.x /2 + 0.5f + x?) * tileScale
-        //position.x / tileScale = -currentMap.mapSize.x / 2 + 0.5f + x?
+        //position.x = (-mapSize.x /2 + 0.5f + x?) * tileScale
+        //position.x / tileScale = -mapSize.x / 2 + 0.5f + x?
         int x = Mathf.RoundToInt(position.x / tileScale + (currentMap.mapSize.x - 1) * 0.5f);
         int y = Mathf.RoundToInt(position.z / tileScale + (currentMap.mapSize.y - 1) * 0.5f);
-        x = Mathf.Clamp(x, 0, tileMap.GetLength(0) - 1);
-        y = Mathf.Clamp(y, 0, tileMap.GetLength(1) - 1);
+        x = Mathf.Clamp(x, 0, currentMap.tileMap.GetLength(0) - 1);
+        y = Mathf.Clamp(y, 0, currentMap.tileMap.GetLength(1) - 1);
 
-        return tileMap[x, y];
+        return currentMap.tileMap[x, y];
     }
 
-    public GameObject GetRandomAdjacentTile(Vector3 position)
+    private MapCoordinate GetCoordinateNearPosition(Vector3 position)
     {
+        //formula for x? given position
+        //position.x = (-mapSize.x /2 + 0.5f + x?) * tileScale
+        //position.x / tileScale = -mapSize.x / 2 + 0.5f + x?
         int x = Mathf.RoundToInt(position.x / tileScale + (currentMap.mapSize.x - 1) * 0.5f);
         int y = Mathf.RoundToInt(position.z / tileScale + (currentMap.mapSize.y - 1) * 0.5f);
+        x = Mathf.Clamp(x, 0, currentMap.tileMap.GetLength(0) - 1);
+        y = Mathf.Clamp(y, 0, currentMap.tileMap.GetLength(1) - 1);
 
-        x = Mathf.Clamp(x, 0, tileMap.GetLength(0) - 1);
-        y = Mathf.Clamp(y, 0, tileMap.GetLength(1) - 1);
-    
-        MapCoordinate[] adjacentTiles = new MapCoordinate[4];
-        adjacentTiles[0] = new MapCoordinate(x + 1, y);
-        adjacentTiles[1] = new MapCoordinate(x, y + 1);
-        adjacentTiles[2] = new MapCoordinate(x - 1, y);
-        adjacentTiles[3] = new MapCoordinate(x, y - 1);
-        adjacentTiles = Utility.ShuffleArray(adjacentTiles);
+        return new MapCoordinate(x, y);
+    }
 
-        bool tileIsInBounds;
-        bool tileIsNotBlocked = false;
-        MapCoordinate openAdjacentTile = new MapCoordinate(-1,-1);
-        
-        foreach (MapCoordinate tile in adjacentTiles){
-            tileIsInBounds = tile.x > 0 && tile.x < tileMap.GetLength(0) && tile.y > 0 && tile.y < tileMap.GetLength(1);
-            if (tileIsInBounds){
-                tileIsNotBlocked = !obstacleMap[tile.x, tile.y];
-            }
-            
-            if (tileIsInBounds && tileIsNotBlocked){
-                openAdjacentTile.x = tile.x;
-                openAdjacentTile.y = tile.y;
-                break;
+    public GameObject ClaimRandomOpenTile(){
+        MapCoordinate coordinate = GetRandomMapCoordinate();
+
+        if (currentMap.ClaimCoordinate(coordinate))
+        {
+            GameObject openTile = MapCoordToTile(coordinate);
+            return openTile;
+        }
+
+        return null;
+    }
+
+    public GameObject ClaimTileNearPosition(Vector3 position)
+    {
+        //formula for x? given position
+        //position.x = (-mapSize.x /2 + 0.5f + x?) * tileScale
+        //position.x / tileScale = -mapSize.x / 2 + 0.5f + x?
+        int x = Mathf.RoundToInt(position.x / tileScale + (currentMap.mapSize.x - 1) * 0.5f);
+        int y = Mathf.RoundToInt(position.z / tileScale + (currentMap.mapSize.y - 1) * 0.5f);
+        x = Mathf.Clamp(x, 0, currentMap.tileMap.GetLength(0) - 1);
+        y = Mathf.Clamp(y, 0, currentMap.tileMap.GetLength(1) - 1);
+
+        MapCoordinate coordinate = new MapCoordinate(x, y);
+
+        if (currentMap.ClaimCoordinate(coordinate))
+        {
+            GameObject openTile = MapCoordToTile(coordinate);
+            return openTile;
+        }
+
+        return null;
+    }
+
+    public GameObject ClaimRandomAdjacentOpenTile(Vector3 position)
+    {
+        MapCoordinate currentCoordinate = GetCoordinateNearPosition(position);
+        int x = currentCoordinate.x;
+        int y = currentCoordinate.y;
+
+        MapCoordinate[] adjacentCoordinates = new MapCoordinate[4];
+        adjacentCoordinates[0] = new MapCoordinate(currentCoordinate.x + 1, y);
+        adjacentCoordinates[1] = new MapCoordinate(x, y + 1);
+        adjacentCoordinates[2] = new MapCoordinate(x - 1, y);
+        adjacentCoordinates[3] = new MapCoordinate(x, y - 1);
+        adjacentCoordinates = Utility.ShuffleArray(adjacentCoordinates);
+
+        foreach (MapCoordinate coordinate in adjacentCoordinates)
+        {
+            if (currentMap.ClaimCoordinate(coordinate))
+            {
+                GameObject adjacentOpenTile = MapCoordToTile(coordinate);
+                return adjacentOpenTile;
             }
         }
 
-        if (openAdjacentTile.x == -1){
-            return null;
-        } else {
-            return tileMap[openAdjacentTile.x, openAdjacentTile.y];
-        }
+        return null;
+    }
+
+    public void UnclaimTile(GameObject tile)
+    {
+        MapCoordinate currentCoordinate = GetCoordinateNearPosition(tile.transform.position);
+        currentMap.UnclaimCoordinate(currentCoordinate);
     }
 
     [System.Serializable]
-    public struct MapCoordinate 
+    public struct MapCoordinate : IEquatable<MapCoordinate>
     {
         public int x;
         public int y;
@@ -254,6 +301,21 @@ public class MapGenerator : MonoBehaviour
             x = _x;
             y = _y;
         }
+
+        public override string ToString()
+        {
+            return $"MapCoordinate:({x}, {y})";
+        }
+
+        public bool IsValid()
+        {
+            return x >= 0 && y >= 0;
+        }
+
+        public bool Equals(MapCoordinate coordinate)
+        {
+            return coordinate.x == x && coordinate.y == y;
+        }
     }
 
     [System.Serializable]
@@ -261,13 +323,66 @@ public class MapGenerator : MonoBehaviour
     {
         public Material skyboxMaterial;
         public Vector2Int mapSize;
+        public MapCoordinate MapCenter {get => new MapCoordinate(mapSize.x / 2, mapSize.y / 2); }
         public int seed;
+
         [Range(0,1)]
         public float obstaclePercent; 
         public float maxObstacleHeight;
         public float minObstacleHeight;
+
         public Color foregroundColor;
         public Color backgroundColor;
-        public MapCoordinate MapCenter {get { return new MapCoordinate(mapSize.x / 2, mapSize.y / 2); }}
+        
+        public GameObject[,] tileMap {get; set;}
+        public bool[,] obstacleMap {get; set;}
+        
+        public List<MapCoordinate> allCoordinates {get; set;}
+        public List<MapCoordinate> allOpenCoordinates {get; set;}
+        public List<MapCoordinate> unclaimedCoordinates {get; set;}
+        public Queue<MapCoordinate> shuffledCoordinates {get; set;}
+        public Queue<MapCoordinate> shuffledOpenCoordinates {get; set;}
+
+        public bool ContainsCoordinate(MapCoordinate coordinate)
+        {
+            return coordinate.IsValid() && coordinate.x < mapSize.x && coordinate.y < mapSize.y;
+        }
+
+        public bool CoordinateUnclaimed(MapCoordinate coordinate)
+        {
+            return unclaimedCoordinates.Contains(coordinate);
+        }
+
+        public bool ClaimCoordinate(MapCoordinate coordinate)
+        {
+            if (CoordinateUnclaimed(coordinate)){
+                unclaimedCoordinates.Remove(coordinate);
+                return true;
+            }
+            
+            return false;    
+        }
+
+        public bool UnclaimCoordinate(MapCoordinate coordinate)
+        {
+            if (!CoordinateUnclaimed(coordinate) && ContainsCoordinate(coordinate)){
+                unclaimedCoordinates.Add(coordinate);
+                return true;
+            } 
+
+            if (!ContainsCoordinate(coordinate))
+            {
+                Debug.LogError($"{coordinate} is not on the current map");
+            }
+
+            if (ContainsCoordinate(coordinate))
+            {
+                Debug.LogError($"{coordinate} is already unclaimed");
+            }
+
+            return false;
+        }
     }
 }
+
+

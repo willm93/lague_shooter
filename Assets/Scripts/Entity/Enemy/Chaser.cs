@@ -6,9 +6,11 @@ using UnityEngine.AI;
 [RequireComponent ( typeof (NavMeshAgent))]
 public class Chaser : Enemy
 {
+    public override string Name {get => "Chaser";}
     public enum State {Idle, Chasing, Attacking};
     [SerializeField] State currentState;
     IEnumerator currentRoutine;
+    GameObject spawnTile;
 
     LivingEntity targetEntity;
     Transform targetTransform;
@@ -17,13 +19,11 @@ public class Chaser : Enemy
     [SerializeField] float pathfinderAccel;
     [SerializeField] float pathfinderAngularSpeed;
     
-    
     [SerializeField] int attackDamage = 5;
     [SerializeField] Color attackColor;
     [SerializeField] float attackDistance = 0.5f;
     [SerializeField] float timeBetweenAttacks = 2f;
     float nextAttackTime;
-    float sqrDistanceToTarget;
 
     float myCollisionRadius;
     float targetCollisionRadius;
@@ -33,15 +33,17 @@ public class Chaser : Enemy
     {
         base.Awake();
         pathfinder = GetComponent<NavMeshAgent>();
+        mapGen = FindAnyObjectByType<MapGenerator>();
     }
 
-    public override void SetCharacteristics(EnemyWave wave)
+    public override void SetCharacteristics(EnemyWave wave, GameObject _spawnTile)
     {
         pathfinderSpeed = wave.enemySpeed;
         maxHealth = wave.enemyHealth;
         attackDamage = wave.attackDamage;
         myMaterial.color = wave.enemyColor;
         attackColor = wave.attackColor;
+        spawnTile = _spawnTile;
     }
 
     protected override void Start()
@@ -67,6 +69,8 @@ public class Chaser : Enemy
         } else {
             currentState = State.Idle;
         }
+
+        mapGen.UnclaimTile(spawnTile);
     }
 
     void Update()
@@ -90,7 +94,7 @@ public class Chaser : Enemy
 
     bool TargetInRange()
     {
-        sqrDistanceToTarget = (targetTransform.position - transform.position).sqrMagnitude;
+        float sqrDistanceToTarget = (targetTransform.position - transform.position).sqrMagnitude;
         return sqrDistanceToTarget < Mathf.Pow(attackDistance + myCollisionRadius + targetCollisionRadius, 2);
     }
 
