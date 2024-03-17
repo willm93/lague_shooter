@@ -28,7 +28,9 @@ public class GameUI : MonoBehaviour
 
     public TextMeshProUGUI ammoUI;
     public GameObject powerUpUI;
-    TextMeshProUGUI powerUpTitle;
+    public GameObject lifeOnKillIcon;
+    public GameObject InfiniteStaminaIcon;
+    public GameObject InfiniteAmmoIcon;
 
     List<Powerup.Variety> currentPowerups = new List<Powerup.Variety>();
     Dictionary<Powerup.Variety, float> powerUpDurations = new Dictionary<Powerup.Variety, float>();
@@ -43,7 +45,6 @@ public class GameUI : MonoBehaviour
         {
             powerUpDurations.Add(variety, 0);
         }
-        powerUpTitle = powerUpUI.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
         player.OnDeath += OnGameOver;
         powerupController.OnPowerup += OnPowerup;
@@ -65,8 +66,8 @@ public class GameUI : MonoBehaviour
             stamPercent = player.stamina / player.maxStamina;
             ammoUI.text = $"{gunController.equippedGun.NameOfGun} \n{gunController.equippedGun.DisplayAmmo()}";
 
-            UpdatePowerUpDurations();
-            powerUpTitle.text = PowerUpsToText(currentPowerups);
+            UpdatePowerUpDuration();
+            ShowPowerups();
         }
 
         hpBar.localScale = new Vector3(healthPercent, 1, 1);
@@ -120,7 +121,7 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    void UpdatePowerUpDurations()
+    void UpdatePowerUpDuration()
     {
         //reverse iteration to allow adding powerups from event
         for(int i = currentPowerups.Count - 1; i >= 0; i--)
@@ -130,6 +131,13 @@ public class GameUI : MonoBehaviour
             if (powerUpDurations[currentPowerups[i]] <= 0)
                 currentPowerups.Remove(currentPowerups[i]);
         }
+    }
+
+    void ShowPowerups()
+    {
+        lifeOnKillIcon.SetActive(currentPowerups.Contains(Powerup.Variety.LifeOnKill));
+        InfiniteStaminaIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteStamina));
+        InfiniteAmmoIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteAmmo));
     }
 
     string PowerUpsToText(List<Powerup.Variety> powerups)
