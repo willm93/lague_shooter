@@ -10,27 +10,30 @@ public class GameUI : MonoBehaviour
     GunController gunController;
     PowerupController powerupController;
 
-    public RectTransform newWaveBanner;
+    [SerializeField] RectTransform newWaveBanner;
     Vector2 originalBannerPosition;
-    public RectTransform bannerTargetPosition;
-    public TextMeshProUGUI newWaveTitle;
-    public float bannerPauseTime = 1.5f;
+    [SerializeField] RectTransform bannerTargetPosition;
+    [SerializeField] TextMeshProUGUI newWaveTitle;
+    [SerializeField] float bannerPauseTime = 1.5f;
     IEnumerator currentCoroutine;
 
-    public TextMeshProUGUI scoreUI;
-    public RectTransform hpBar;
+    [SerializeField] TextMeshProUGUI scoreUI;
+    [SerializeField] RectTransform hpBar;
     float healthPercent = 1;
     float currentVelocity;
     float hpTransitionTime = 0.1f;
 
-    public RectTransform stamBar;
+    [SerializeField] RectTransform stamBar;
     float stamPercent = 1;
 
-    public TextMeshProUGUI ammoUI;
-    public GameObject powerUpUI;
-    public GameObject lifeOnKillIcon;
-    public GameObject InfiniteStaminaIcon;
-    public GameObject InfiniteAmmoIcon;
+    [SerializeField] TextMeshProUGUI ammoUI;
+    [SerializeField] GameObject powerUpUI;
+    [SerializeField] GameObject lifeOnKillIcon;
+    [SerializeField] GameObject infiniteStaminaIcon;
+    [SerializeField] GameObject infiniteAmmoIcon;
+    [SerializeField] TextMeshProUGUI lifeOnKillText;
+    [SerializeField] TextMeshProUGUI infiniteStaminaText;
+    [SerializeField] TextMeshProUGUI infiniteAmmoText;
 
     List<Powerup.Variety> currentPowerups = new List<Powerup.Variety>();
     Dictionary<Powerup.Variety, float> powerUpDurations = new Dictionary<Powerup.Variety, float>();
@@ -88,7 +91,7 @@ public class GameUI : MonoBehaviour
 
     void OnPowerup(Powerup.Variety variety, float duration)
     {
-        powerUpDurations[variety] = duration;
+        powerUpDurations[variety] += duration;
 
         if (!currentPowerups.Contains(variety))
             currentPowerups.Add(variety);
@@ -129,15 +132,24 @@ public class GameUI : MonoBehaviour
             powerUpDurations[currentPowerups[i]] -= Time.deltaTime;
 
             if (powerUpDurations[currentPowerups[i]] <= 0)
+            {
+                powerUpDurations[currentPowerups[i]] = 0;
                 currentPowerups.Remove(currentPowerups[i]);
+            }
+                
         }
     }
 
     void ShowPowerups()
     {
         lifeOnKillIcon.SetActive(currentPowerups.Contains(Powerup.Variety.LifeOnKill));
-        InfiniteStaminaIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteStamina));
-        InfiniteAmmoIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteAmmo));
+        lifeOnKillText.text = powerUpDurations[Powerup.Variety.LifeOnKill].ToString();
+
+        infiniteStaminaIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteStamina));
+        infiniteStaminaText.text = powerUpDurations[Powerup.Variety.InfiniteStamina].ToString();
+        
+        infiniteAmmoIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteAmmo));
+        infiniteAmmoText.text = powerUpDurations[Powerup.Variety.InfiniteAmmo].ToString();
     }
 
     string PowerUpsToText(List<Powerup.Variety> powerups)

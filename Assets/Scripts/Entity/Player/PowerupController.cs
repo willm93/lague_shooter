@@ -6,7 +6,11 @@ public class PowerupController : MonoBehaviour
 {
     public bool lifeOnKill {get; private set;}
     public bool infiniteAmmo {get; private set;}
-    public bool infinitStamina {get; private set;}
+    public bool infiniteStamina {get; private set;}
+    float lifeOnKillDuration;
+    float infiniteAmmoDuration;
+    float infiniteStaminaDuration;
+
     public event Action<Powerup.Variety, float> OnPowerup;
 
     Player player;
@@ -21,40 +25,88 @@ public class PowerupController : MonoBehaviour
 
     public void PowerUp(Powerup.Variety kind, float duration)
     {
-        switch (kind){
+        OnPowerup?.Invoke(kind, duration);
+
+        switch (kind)
+        {
             case Powerup.Variety.LifeOnKill:
-                OnPowerup?.Invoke(kind, duration);
-                StartCoroutine(LifeOnKillRoutine(duration));
+                if(!lifeOnKill)
+                {
+                    lifeOnKill = true;
+                    StartCoroutine(LifeOnKillRoutine(duration));
+                } else {
+                    lifeOnKillDuration += duration;
+                }
                 break;
+
             case Powerup.Variety.InfiniteAmmo:
-                OnPowerup?.Invoke(kind, duration);
-                StartCoroutine(InfiniteAmmoRoutine(duration));
+                if(!infiniteAmmo)
+                {
+                    infiniteAmmo = true;
+                    StartCoroutine(InfiniteAmmoRoutine(duration));
+                } else {
+                    infiniteAmmoDuration += duration;
+                }
                 break;
+
             case Powerup.Variety.InfiniteStamina:
-                OnPowerup?.Invoke(kind, duration);
-                StartCoroutine(InfiniteStaminaRoutine(duration));
+                if(!infiniteStamina)
+                {
+                    infiniteStamina = true;
+                    StartCoroutine(InfiniteStaminaRoutine(duration));
+                } else {
+                    infiniteStaminaDuration += duration;
+                }
                 break;
         }
     }
 
-    IEnumerator LifeOnKillRoutine(float duration)
+    IEnumerator LifeOnKillRoutine(float initDuration)
     {
-        lifeOnKill = true;
-        yield return new WaitForSeconds(duration);
+        float refreshRate = 0.1f;
+        lifeOnKillDuration = initDuration;
+
+        while (lifeOnKillDuration >= 0)
+        {
+            lifeOnKillDuration -= refreshRate;
+            yield return new WaitForSeconds(refreshRate);
+        }
+        
+        lifeOnKillDuration = 0;
         lifeOnKill = false;
     }
 
-    IEnumerator InfiniteAmmoRoutine(float duration)
+    IEnumerator InfiniteAmmoRoutine(float initDuration)
     {
+        float refreshRate = 0.1f;
+        infiniteAmmoDuration = initDuration;
         gunController.InfiniteAmmo(true);
-        yield return new WaitForSeconds(duration);
+
+        while (infiniteAmmoDuration >= 0)
+        {
+            infiniteAmmoDuration -= refreshRate;
+            yield return new WaitForSeconds(refreshRate);
+        }
+
+        infiniteAmmoDuration = 0;
+        infiniteAmmo = false;
         gunController.InfiniteAmmo(false);
     }
 
-    IEnumerator InfiniteStaminaRoutine(float duration)
+    IEnumerator InfiniteStaminaRoutine(float initDuration)
     {
+        float refreshRate = 0.1f;
+        infiniteStaminaDuration = initDuration;
         player.InfiniteStamina(true);
-        yield return new WaitForSeconds(duration);
+
+        while (infiniteStaminaDuration >= 0)
+        {
+            infiniteStaminaDuration -= refreshRate;
+            yield return new WaitForSeconds(refreshRate);
+        }
+
+        infiniteStaminaDuration = 0;
+        infiniteStamina = false;
         player.InfiniteStamina(false);
     }
 

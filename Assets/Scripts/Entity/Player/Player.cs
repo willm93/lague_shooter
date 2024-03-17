@@ -18,6 +18,7 @@ public class Player : LivingEntity
     Rigidbody myRigidbody;
     public float moveSpeed = 5f;
     public float sprintSpeed = 8f;
+    float currentSpeed;
 
     public float maxStamina = 100f;
     public float stamina {get; private set;}
@@ -45,33 +46,35 @@ public class Player : LivingEntity
 
     public void SetVelocity(Vector3 direction, bool sprintAttempted)
     {
-        if(infiniteStamina){
-            isSprinting = sprintAttempted;
+        isSprinting = CanSprint() && sprintAttempted && direction != Vector3.zero;
+        UpdateStamina();
+        currentSpeed =  isSprinting ? sprintSpeed : moveSpeed;
 
-            if (stamina < maxStamina){
-                stamina += staminaRechargeRate * Time.deltaTime;
-            }
-            velocity = direction * (isSprinting ? sprintSpeed : moveSpeed);
-            return;
-        }
-        
-        if (sprintAttempted && stamina > 0 && !staminaOnCooldown){
-            isSprinting = true;
+        velocity = direction * currentSpeed;          
+    }
+
+    bool CanSprint()
+    {
+        return infiniteStamina || (stamina > 0 && !staminaOnCooldown);
+    }
+
+    void UpdateStamina()
+    {
+        if (isSprinting && !infiniteStamina)
+        {
             stamina -= staminaUsageRate * Time.deltaTime;
-            velocity = direction * sprintSpeed;
-        } else {
-            isSprinting = false;
-            velocity = direction * moveSpeed;
         }
 
-        if (!isSprinting && stamina < maxStamina){
+        if ((!isSprinting || infiniteStamina) && stamina < maxStamina)
+        {
             stamina += staminaRechargeRate * Time.deltaTime;
         }
 
-        if (stamina <= 0 && !staminaOnCooldown){
+        if (stamina <= 0 && !staminaOnCooldown)
+        {
             staminaOnCooldown = true;
             StartCoroutine(StaminaCooldown());
-        }            
+        }
     }
 
     IEnumerator StaminaCooldown()

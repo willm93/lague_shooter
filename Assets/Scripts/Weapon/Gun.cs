@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 [RequireComponent (typeof (MuzzleFlash))]
@@ -141,5 +142,7 @@ public abstract class Gun : MonoBehaviour, IFirearm
     public virtual void InfiniteAmmo(bool isOn)
     {
         infiniteAmmo = isOn;
+        if (infiniteAmmo)
+            bulletsRemaining = magSize;
     }
 }
