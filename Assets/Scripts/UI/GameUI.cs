@@ -27,7 +27,6 @@ public class GameUI : MonoBehaviour
     float stamPercent = 1;
 
     [SerializeField] TextMeshProUGUI ammoUI;
-    [SerializeField] GameObject powerUpUI;
     [SerializeField] GameObject lifeOnKillIcon;
     [SerializeField] GameObject infiniteStaminaIcon;
     [SerializeField] GameObject infiniteAmmoIcon;

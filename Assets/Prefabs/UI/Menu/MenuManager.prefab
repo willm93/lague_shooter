@@ -44,5 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fea7376688fa7a9499f656c238cc046d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menus: []
+  menus:
+  - menuName: main
+    menuHolder: {fileID: 0}
+  - menuName: options
+    menuHolder: {fileID: 0}
   fadePlane: {fileID: 0}
