@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 [RequireComponent (typeof (MuzzleFlash))]

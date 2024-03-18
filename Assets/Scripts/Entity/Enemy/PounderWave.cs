@@ -48,7 +48,7 @@ public class PounderWave : MonoBehaviour
 
     IEnumerator CheckBounds()
     {
-        float refreshRate = 0.5f;
+        float refreshRate = 1f;
         while (true)
         {
             if (!Physics.Raycast(transform.position, -transform.up, 10f, groundMask))
