@@ -110,6 +110,7 @@ public class AudioManager : MonoBehaviour
         musicSources[1].volume = musicVolume * masterVolume;
         sfxSource.volume = sfxVolume * masterVolume;
         contSfxSource.volume = sfxVolume * masterVolume;
+        unpausableSfxSource.volume = sfxVolume * masterVolume;
 
         PlayerPrefs.SetFloat("master_volume", masterVolume);
         PlayerPrefs.SetFloat("sfx_volume", sfxVolume);
