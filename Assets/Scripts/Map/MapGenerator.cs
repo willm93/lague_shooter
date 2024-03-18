@@ -141,7 +141,8 @@ public class MapGenerator : MonoBehaviour
         bool coordinateNotObstacle = false;
         bool coordinateUnchecked = false;
 
-        while (queue.Count > 0){
+        while (queue.Count > 0)
+        {
             MapCoordinate coordinate = queue.Dequeue();
 
             MapCoordinate[] adjacentCoordinates = new MapCoordinate[4];    
@@ -297,7 +298,8 @@ public class MapGenerator : MonoBehaviour
         public int x;
         public int y;
 
-        public MapCoordinate(int _x, int _y){
+        public MapCoordinate(int _x, int _y)
+        {
             x = _x;
             y = _y;
         }
@@ -355,7 +357,8 @@ public class MapGenerator : MonoBehaviour
 
         public bool ClaimCoordinate(MapCoordinate coordinate)
         {
-            if (CoordinateUnclaimed(coordinate)){
+            if (CoordinateUnclaimed(coordinate))
+            {
                 unclaimedCoordinates.Remove(coordinate);
                 return true;
             }
@@ -365,7 +368,8 @@ public class MapGenerator : MonoBehaviour
 
         public bool UnclaimCoordinate(MapCoordinate coordinate)
         {
-            if (!CoordinateUnclaimed(coordinate) && ContainsCoordinate(coordinate)){
+            if (!CoordinateUnclaimed(coordinate) && ContainsCoordinate(coordinate))
+            {
                 unclaimedCoordinates.Add(coordinate);
                 return true;
             } 

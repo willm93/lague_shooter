@@ -31,7 +31,8 @@ public abstract class Enemy : LivingEntity
 
     public override void TakeHit(int damage, Vector3 hitDirection)
     {
-        if (damage >= currentHealth && !deathEffectPlayed){            
+        if (damage >= currentHealth && !deathEffectPlayed)
+        {            
             float effectLifetime = deathEffectPrefab.main.startLifetime.constant;
             ParticleSystem deathEffect = Instantiate(deathEffectPrefab, transform.position, Quaternion.FromToRotation(Vector3.forward, hitDirection));
             deathEffect.GetComponent<Renderer>().material.color = originalColor;
@@ -44,7 +45,8 @@ public abstract class Enemy : LivingEntity
 
     protected override void Die()
     {
-        if (deathSound != null){
+        if (deathSound != null)
+        {
             AudioManager.instance.PlaySound(deathSound);
         } else {
             AudioManager.instance.PlaySound("Enemy Death");

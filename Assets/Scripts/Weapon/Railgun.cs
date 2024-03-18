@@ -44,7 +44,8 @@ public class Railgun : MonoBehaviour, IFirearm
 
     void Update()
     {
-        if(Time.time > nextFireTime){
+        if(Time.time > nextFireTime)
+        {
             OnFireEnd?.Invoke();
             currentLazer = null;
         }
@@ -54,7 +55,8 @@ public class Railgun : MonoBehaviour, IFirearm
     {
         triggerHeld = true;
         
-        if(infiniteAmmo && currentFiringRoutine == null){
+        if(infiniteAmmo && currentFiringRoutine == null)
+        {
             currentFiringRoutine = InstantFire();
             StartCoroutine(currentFiringRoutine);
             return;
@@ -78,15 +80,16 @@ public class Railgun : MonoBehaviour, IFirearm
 
     IEnumerator ChargeFire()
     {
-        while (triggerHeld){
-            
+        while (triggerHeld)
+        {
             AudioManager.instance.PlayContinuousSound(chargeSound, false);
             while (chargePercent < 1 && triggerHeld){
                 chargePercent += Time.deltaTime * 1 / chargeTime;
                 yield return null;
             }
             
-            if (chargePercent >= 1){
+            if (chargePercent >= 1)
+            {
                 OnFire?.Invoke();
                 AudioManager.instance.PlaySound(fireSound);
                 FireLazer();

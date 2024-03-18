@@ -121,11 +121,13 @@ public class PlayerInput : MonoBehaviour
     void OnPausePerformed(InputAction.CallbackContext value)
     {
         isPaused = !isPaused;
-        if(isPaused){
+        if(isPaused)
+        {
             input.Player.Disable();
             Time.timeScale = 0;
             OnPause?.Invoke();
-        } else {
+        } else 
+        {
             input.Player.Enable();
             Time.timeScale = 1;
             OnResume?.Invoke();

@@ -11,7 +11,8 @@ public class Revolver : Gun
     public override void HoldTrigger()
     {
         base.HoldTrigger();
-        if (currentFiringRoutine == null && !isReloading){
+        if (currentFiringRoutine == null && !isReloading)
+        {
             currentFiringRoutine = Fire();
             StartCoroutine(currentFiringRoutine);
         }
@@ -34,7 +35,8 @@ public class Revolver : Gun
 
     IEnumerator Fire()
     {
-        if (bulletsRemaining > 0){
+        if (bulletsRemaining > 0)
+        {
             FireProjectile();
             yield return new WaitForSeconds(secondsBetweenShots);
         }
@@ -44,12 +46,14 @@ public class Revolver : Gun
     protected override void FireProjectile()
     {
         //spawn projectile(s)
-        foreach(Transform pSpawn in projectileSpawns){
+        foreach(Transform pSpawn in projectileSpawns)
+        {
             newProjectile = Instantiate<Projectile>(projectilePrefab, pSpawn.position, pSpawn.rotation);
             newProjectile.SetSpeed(muzzleVelocity);
         }
 
-        if(!infiniteAmmo){
+        if(!infiniteAmmo)
+        {
             bulletsRemaining--;
         }
         muzzleFlash.Activate();
@@ -68,7 +72,8 @@ public class Revolver : Gun
         float interpolation;
         bool spawnedShells = false;
 
-        while (reloadPercent <= 1){    
+        while (reloadPercent <= 1)
+        {    
             //animate
             reloadPercent += Time.deltaTime * (1 / reloadTime);
             interpolation = (-Mathf.Pow(reloadPercent, 2) + reloadPercent) * 4; //quadratic function where f(x) goes from 0 > 1 > 0 as x goes from 0 > 1

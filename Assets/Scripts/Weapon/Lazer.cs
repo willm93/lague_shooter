@@ -31,7 +31,8 @@ public class Lazer : MonoBehaviour
 
     void FixedUpdate()
     {   
-        if (InsideCollider()){
+        if (InsideCollider())
+        {
             lineRenderer.SetPosition(0, Vector3.zero);
             lineRenderer.SetPosition(1, Vector3.zero);
 

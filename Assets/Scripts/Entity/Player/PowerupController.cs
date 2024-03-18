@@ -30,6 +30,7 @@ public class PowerupController : MonoBehaviour
         switch (kind)
         {
             case Powerup.Variety.LifeOnKill:
+            {
                 if(!lifeOnKill)
                 {
                     lifeOnKill = true;
@@ -38,8 +39,9 @@ public class PowerupController : MonoBehaviour
                     lifeOnKillDuration += duration;
                 }
                 break;
-
+            }
             case Powerup.Variety.InfiniteAmmo:
+            {
                 if(!infiniteAmmo)
                 {
                     infiniteAmmo = true;
@@ -48,8 +50,9 @@ public class PowerupController : MonoBehaviour
                     infiniteAmmoDuration += duration;
                 }
                 break;
-
+            }
             case Powerup.Variety.InfiniteStamina:
+            {
                 if(!infiniteStamina)
                 {
                     infiniteStamina = true;
@@ -58,6 +61,7 @@ public class PowerupController : MonoBehaviour
                     infiniteStaminaDuration += duration;
                 }
                 break;
+            }
         }
     }
 

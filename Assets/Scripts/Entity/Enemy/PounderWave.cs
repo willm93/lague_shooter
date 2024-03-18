@@ -6,7 +6,6 @@ public class PounderWave : MonoBehaviour
 {
     public float speed = 1f;
     public int damage = 20;
-    int hitCount = 0;
     [SerializeField] LayerMask groundMask;
     [SerializeField] EnemySpawner enemySpawner;
 
@@ -50,8 +49,10 @@ public class PounderWave : MonoBehaviour
     IEnumerator CheckBounds()
     {
         float refreshRate = 0.5f;
-        while (true){
-            if (!Physics.Raycast(transform.position, -transform.up, 10f, groundMask)){
+        while (true)
+        {
+            if (!Physics.Raycast(transform.position, -transform.up, 10f, groundMask))
+            {
                 Destroy(gameObject);
             }
 

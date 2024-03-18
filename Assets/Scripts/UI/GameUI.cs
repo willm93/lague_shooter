@@ -31,9 +31,6 @@ public class GameUI : MonoBehaviour
     [SerializeField] GameObject lifeOnKillIcon;
     [SerializeField] GameObject infiniteStaminaIcon;
     [SerializeField] GameObject infiniteAmmoIcon;
-    [SerializeField] TextMeshProUGUI lifeOnKillText;
-    [SerializeField] TextMeshProUGUI infiniteStaminaText;
-    [SerializeField] TextMeshProUGUI infiniteAmmoText;
 
     List<Powerup.Variety> currentPowerups = new List<Powerup.Variety>();
     Dictionary<Powerup.Variety, float> powerUpDurations = new Dictionary<Powerup.Variety, float>();
@@ -143,13 +140,8 @@ public class GameUI : MonoBehaviour
     void ShowPowerups()
     {
         lifeOnKillIcon.SetActive(currentPowerups.Contains(Powerup.Variety.LifeOnKill));
-        lifeOnKillText.text = powerUpDurations[Powerup.Variety.LifeOnKill].ToString();
-
         infiniteStaminaIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteStamina));
-        infiniteStaminaText.text = powerUpDurations[Powerup.Variety.InfiniteStamina].ToString();
-        
         infiniteAmmoIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteAmmo));
-        infiniteAmmoText.text = powerUpDurations[Powerup.Variety.InfiniteAmmo].ToString();
     }
 
     string PowerUpsToText(List<Powerup.Variety> powerups)

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MuzzleFlash : MonoBehaviour
@@ -19,7 +17,8 @@ public class MuzzleFlash : MonoBehaviour
         flashHolder.SetActive(true);
 
         int flashSpritesIndex = Random.Range(0, flashSprites.Length);
-        foreach(SpriteRenderer renderer in spriteRenderers){
+        foreach(SpriteRenderer renderer in spriteRenderers)
+        {
             renderer.sprite = flashSprites[flashSpritesIndex];
         }
 

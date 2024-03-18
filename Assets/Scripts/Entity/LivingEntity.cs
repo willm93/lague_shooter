@@ -24,7 +24,8 @@ public class LivingEntity : MonoBehaviour, IDamageable
     {
         //Debug.Log(this.name + " took " + damage + " damage");
         currentHealth -= damage;
-        if (currentHealth <= 0 && !dead){
+        if (currentHealth <= 0 && !dead)
+        {
             Die();
         }
     }

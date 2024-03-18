@@ -30,7 +30,8 @@ public class OptionsMenu : Menu
 
     public void Back()
     {
-        if (MenuManager.instance.menuLookup.ContainsKey(callingMenuName)){
+        if (MenuManager.instance.menuLookup.ContainsKey(callingMenuName))
+        {
             MenuManager.instance.OpenMenu(callingMenuName, menuName);
         } else {
             throw new ArgumentNullException("No calling menu to return to");
@@ -69,7 +70,8 @@ public class OptionsMenu : Menu
     public void SetFullscreen()
     {
         Debug.Log("Set Full Screen");
-        if (fullscreen.isOn){
+        if (fullscreen.isOn)
+        {
             resolution.interactable = false;
             Resolution[] resolutions = Screen.resolutions;
             Resolution maxResolution = resolutions[resolutions.Length - 1];

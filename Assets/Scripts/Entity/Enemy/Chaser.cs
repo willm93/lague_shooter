@@ -58,7 +58,9 @@ public class Chaser : Enemy
 
         targetEntity = GameObject.FindGameObjectWithTag("Player")?.GetComponent<LivingEntity>();
         hasNavMesh = FindAnyObjectByType<NavMeshSurface>() != null;
-        if(targetEntity != null && hasNavMesh){
+
+        if(targetEntity != null && hasNavMesh)
+        {
             targetTransform = targetEntity.transform;
             targetEntity.OnDeath += OnTargetDeath;
 
@@ -77,16 +79,15 @@ public class Chaser : Enemy
 
     void Update()
     {
-        if (targetEntity != null && Time.time > nextAttackTime && hasNavMesh) {
-            if (TargetInRange()){
-
-                if (currentRoutine != null){
-                    StopCoroutine(currentRoutine);
-                }
-                currentRoutine = Attack();
-                StartCoroutine(currentRoutine);
-                nextAttackTime = Time.time + timeBetweenAttacks;
+        if (targetEntity != null && Time.time > nextAttackTime && TargetInRange() && hasNavMesh) 
+        {
+            if (currentRoutine != null)
+            {
+                StopCoroutine(currentRoutine);
             }
+            currentRoutine = Attack();
+            StartCoroutine(currentRoutine);
+            nextAttackTime = Time.time + timeBetweenAttacks;
         }
         if (targetEntity != null && currentState == State.Idle && hasNavMesh){
             currentRoutine = Chase();

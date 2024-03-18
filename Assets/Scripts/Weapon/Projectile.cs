@@ -44,7 +44,8 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    void OnHitObject(Collider collider){
+    void OnHitObject(Collider collider)
+    {
         if (collider != previousCollider)
         {
             IDamageable damageableObject = collider.GetComponent<IDamageable>();
