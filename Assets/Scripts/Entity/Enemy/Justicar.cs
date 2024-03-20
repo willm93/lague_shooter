@@ -4,15 +4,19 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent ( typeof (NavMeshAgent))]
-public class Chaser : Enemy
+public class Justicar : Enemy
 {
-    public override string Name {get => "Chaser";}
+    public override string Name {get => "Justicar";}
     public override bool NeededForCount {get => true;}
 
     public enum State {Idle, Chasing, Attacking};
     [SerializeField] State currentState;
     IEnumerator currentRoutine;
     GameObject spawnTile;
+
+    [SerializeField] Transform weaponHoldPoint;
+    [SerializeField] GameObject weapon;
+    [SerializeField] LayerMask obstacleMask;
 
     LivingEntity targetEntity;
     Transform targetTransform;
@@ -110,32 +114,35 @@ public class Chaser : Enemy
     {
         currentState = State.Attacking;
 
-        Vector3 originalPosition = transform.position;
-        Vector3 directionToTarget = (targetTransform.position - transform.position).normalized;
-        Vector3 targetPosition = targetTransform.position - (directionToTarget * targetCollisionRadius);
-
-        float lungeSpeed = 3f;
+        float lungeDistance = 12f;
+        float chargeTime = 1f;
+        float lungeSpeed = 1f;
         float percent = 0;
-        float interpolation;
-        bool hasAppliedDamage = false;
 
-        myMaterial.color = attackColor;
-        AudioManager.instance.PlaySound(attackSound);
+        //charge
         while (percent <= 1)
         {
-            //apply damage halfway through animation
-            if (percent > 0.5f && !hasAppliedDamage){
-                hasAppliedDamage = true;
-                targetEntity.TakeDamage(attackDamage);
-            }
-            
-            //animate
-            percent += Time.deltaTime * lungeSpeed;
-            interpolation = (-Mathf.Pow(percent, 2) + percent) * 4; //quadratic function where f(percent) <= 1
-            transform.position = Vector3.Lerp(originalPosition, targetPosition, interpolation);
+            percent += Time.deltaTime / chargeTime;
 
+            transform.rotation = Quaternion.LookRotation(targetTransform.position - transform.position, Vector3.up);
+            weaponHoldPoint.transform.Rotate(Vector3.right * 90 * Time.deltaTime / chargeTime);
             yield return null;
         }
+        percent = 0;
+
+        //lunge
+        myMaterial.color = attackColor;
+        //AudioManager.instance.PlaySound(attackSound);
+        Vector3 targetPosition = FindTargetPosition(lungeDistance);
+        yield return new WaitForSeconds(0.2f); //to give a chance to dodge
+        while (percent <= 1)
+        {    
+            //animate
+            percent += Time.deltaTime * lungeSpeed;
+            transform.position = Vector3.Lerp(transform.position, targetPosition, percent);
+            yield return null;
+        }
+        weaponHoldPoint.transform.Rotate(Vector3.right * -90);
         myMaterial.color = originalColor;
 
         currentState = State.Idle;
@@ -146,7 +153,7 @@ public class Chaser : Enemy
     {
         currentState = State.Chasing;
 
-        float refreshRate = 0.1f;
+        float refreshRate = 0.05f;
         while (targetEntity != null)
         {
             pathfinder.SetDestination(targetEntity.transform.position);
@@ -157,4 +164,21 @@ public class Chaser : Enemy
         currentRoutine = null;
     }
 
+    Vector3 FindTargetPosition(float lungeDistance)
+    {
+        Vector3 targetPosition;   
+        Vector3 directionToTarget = (targetTransform.position - transform.position).normalized;
+        directionToTarget.y = 0; //ignore height difference
+
+        Ray ray = new Ray(transform.position, directionToTarget);
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, lungeDistance, obstacleMask))
+        {
+            targetPosition = hitInfo.point;
+        } else
+        {
+            targetPosition = transform.position + directionToTarget * lungeDistance;
+        }
+
+        return targetPosition;
+    }
 }
