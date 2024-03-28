@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
     Transform player;
-    Vector3 offsetFromPlayer;
+    Vector3 offsetFromCenter;
     Vector3 newPosition;
     Vector3 newPositionVelocity;
     public float newPositionTime = 0.4f;
@@ -17,13 +15,13 @@ public class CameraFollow : MonoBehaviour
         player = FindAnyObjectByType<Player>().transform;
         player.GetComponent<Player>().OnDeath += OnPlayerDeath;
         playerAlive = true;
-        offsetFromPlayer = this.transform.position - player.position;
+        offsetFromCenter = this.transform.position;
     }
 
     void FixedUpdate()
     {   
         if (playerAlive){
-            newPosition = player.position + offsetFromPlayer;
+            newPosition = player.position + offsetFromCenter;
             this.transform.position = Vector3.SmoothDamp(this.transform.position, newPosition, ref newPositionVelocity, newPositionTime);
         }
     }

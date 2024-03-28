@@ -1,13 +1,19 @@
 
+using System;
+
 public interface IFirearm
 {
-    public bool CanReload {get;}
+    public string NameOfGun {get;}
     public float ReloadTime {get;}
+    public string DisplayAmmo();
+    public bool CanReload();
     public void HoldTrigger();
     public void ReleaseTrigger();
     public void Reload();
 
-    public string GetNameOfGun();
-    public int GetBulletsRemaining();
-    public int GetMagSize();
+    public bool EffectsPlayer {get;}
+    public event Action OnFire;
+    public event Action OnFireEnd;
+
+    public void InfiniteAmmo(bool isOn);
 }

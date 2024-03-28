@@ -1,41 +1,52 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem.Android;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
     Player player;
-    PlayerController playerController;
     GunController gunController;
+    PowerupController powerupController;
 
-    public RectTransform newWaveBanner;
+    [SerializeField] RectTransform newWaveBanner;
     Vector2 originalBannerPosition;
-    public RectTransform bannerTargetPosition;
-    public TextMeshProUGUI newWaveTitle;
-    public float bannerPauseTime = 1.5f;
+    [SerializeField] RectTransform bannerTargetPosition;
+    [SerializeField] TextMeshProUGUI newWaveTitle;
+    [SerializeField] float bannerPauseTime = 1.5f;
     IEnumerator currentCoroutine;
 
-    public TextMeshProUGUI scoreUI;
-    public RectTransform hpBar;
+    [SerializeField] TextMeshProUGUI scoreUI;
+    [SerializeField] RectTransform hpBar;
     float healthPercent = 1;
     float currentVelocity;
     float hpTransitionTime = 0.1f;
 
-    public RectTransform stamBar;
+    [SerializeField] RectTransform stamBar;
     float stamPercent = 1;
 
-    public TextMeshProUGUI ammoUI;
+    [SerializeField] TextMeshProUGUI ammoUI;
+    [SerializeField] GameObject lifeOnKillIcon;
+    [SerializeField] GameObject infiniteStaminaIcon;
+    [SerializeField] GameObject infiniteAmmoIcon;
+
+    List<Powerup.Variety> currentPowerups = new List<Powerup.Variety>();
+    Dictionary<Powerup.Variety, float> powerUpDurations = new Dictionary<Powerup.Variety, float>();
 
     void Start()
     {
         player = FindObjectOfType<Player>();
-        playerController = player.GetComponent<PlayerController>();
         gunController = player.GetComponent<GunController>();
+        powerupController = player.GetComponent<PowerupController>();
+        
+        foreach(Powerup.Variety variety in Enum.GetValues(typeof(Powerup.Variety)))
+        {
+            powerUpDurations.Add(variety, 0);
+        }
+
         player.OnDeath += OnGameOver;
+        powerupController.OnPowerup += OnPowerup;
 
         EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
         if (spawner != null){
@@ -49,20 +60,17 @@ public class GameUI : MonoBehaviour
     {
         scoreUI.text = "Kill Count: " + ScoreKeeper.score;
 
-        if (player != null){
-            healthPercent = Mathf.SmoothDamp(healthPercent,  player.currentHealth / (float) player.maxHealth, ref currentVelocity, hpTransitionTime);
+        if (player){
+            healthPercent = Mathf.SmoothDamp(healthPercent,  player.currentHealth / (float) player.MaxHealth, ref currentVelocity, hpTransitionTime);
+            stamPercent = player.stamina / player.maxStamina;
+            ammoUI.text = $"{gunController.equippedGun.NameOfGun} \n{gunController.equippedGun.DisplayAmmo()}";
+
+            UpdatePowerUpDuration();
+            ShowPowerups();
         }
+
         hpBar.localScale = new Vector3(healthPercent, 1, 1);
-
-        if (playerController != null){
-            stamPercent = playerController.stamina / playerController.maxStamina;
-        }
         stamBar.localScale = new Vector3(stamPercent, 1, 1);
-
-        if (gunController != null){
-            ammoUI.text = $"{gunController.equippedGun.NameOfGun} \n{gunController.equippedGun.GetBulletsRemaining()} / {gunController.equippedGun.GetMagSize()}";
-        }
-
     }
 
     void OnNewWave(int waveNumber)
@@ -77,9 +85,17 @@ public class GameUI : MonoBehaviour
         StartCoroutine(currentCoroutine);
     }
 
+    void OnPowerup(Powerup.Variety variety, float duration)
+    {
+        powerUpDurations[variety] += duration;
+
+        if (!currentPowerups.Contains(variety))
+            currentPowerups.Add(variety);
+    }
+
     void OnGameOver()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     IEnumerator AnimateNewWaveBanner()
@@ -102,6 +118,40 @@ public class GameUI : MonoBehaviour
             newWaveBanner.anchoredPosition = Vector2.Lerp(originalBannerPosition, bannerTargetPosition.anchoredPosition, percent);
             yield return null;
         }
+    }
+
+    void UpdatePowerUpDuration()
+    {
+        //reverse iteration to allow adding powerups from event
+        for(int i = currentPowerups.Count - 1; i >= 0; i--)
+        {
+            powerUpDurations[currentPowerups[i]] -= Time.deltaTime;
+
+            if (powerUpDurations[currentPowerups[i]] <= 0)
+            {
+                powerUpDurations[currentPowerups[i]] = 0;
+                currentPowerups.Remove(currentPowerups[i]);
+            }
+                
+        }
+    }
+
+    void ShowPowerups()
+    {
+        lifeOnKillIcon.SetActive(currentPowerups.Contains(Powerup.Variety.LifeOnKill));
+        infiniteStaminaIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteStamina));
+        infiniteAmmoIcon.SetActive(currentPowerups.Contains(Powerup.Variety.InfiniteAmmo));
+    }
+
+    string PowerUpsToText(List<Powerup.Variety> powerups)
+    {
+        string text = "";
+        foreach(Powerup.Variety p in powerups)
+        {
+            text += "\n" + p.ToString();
+        }
+        
+        return text;
     }
 }
 

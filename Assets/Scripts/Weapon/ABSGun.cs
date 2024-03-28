@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ABSGun : Gun
@@ -15,15 +14,18 @@ public class ABSGun : Gun
         if (currentFiringRoutine == null && !isReloading){
             switch (fireMode)
             {
-                case FireMode.Auto:{
+                case FireMode.Auto:
+                {
                     currentFiringRoutine = AutomaticFire();
                     break;
                 }
-                case FireMode.Burst:{
+                case FireMode.Burst:
+                {
                     currentFiringRoutine = BurstFire();
                     break;
                 }
-                case FireMode.Single:{
+                case FireMode.Single:
+                {
                     currentFiringRoutine = SingleFire();
                     break;
                 }
@@ -55,7 +57,8 @@ public class ABSGun : Gun
 
     IEnumerator AutomaticFire()
     {
-        while (triggerHeld && bulletsRemaining > 0){
+        while (triggerHeld && bulletsRemaining > 0)
+        {
             FireProjectile();
             yield return new WaitForSeconds(secondsBetweenShots);
         }
@@ -64,8 +67,10 @@ public class ABSGun : Gun
 
     IEnumerator BurstFire()
     {
-        for(int i = 0; i < burstCount; i++){
-            if (bulletsRemaining <= 0){
+        for(int i = 0; i < burstCount; i++)
+        {
+            if (bulletsRemaining <= 0)
+            {
                 break;
             }
 
@@ -82,16 +87,5 @@ public class ABSGun : Gun
             yield return new WaitForSeconds(secondsBetweenShots);
         }
         currentFiringRoutine = null;
-    }
-
-    
-    public void DebugInfo(string caller)
-    {
-        Debug.Log("                                                Caller: " + caller);
-        Debug.Log("                                                Gun: " + nameOfGun);
-        Debug.Log("                                                                        Current Firing Routine: " + currentFiringRoutine);
-        Debug.Log("                                                                        Trigger Held: " + triggerHeld);
-        //Debug.Log("                                                                        Reloading: " + isReloading);
-        //Debug.Log("                                                                        Bullets Remaining: " + bulletsRemaining);
     }
 }

@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent (typeof (MuzzleFlash))]
-public abstract class Gun : MonoBehaviour
+public abstract class Gun : MonoBehaviour, IFirearm
 {
     [SerializeField] 
     protected string nameOfGun; 
@@ -26,10 +25,9 @@ public abstract class Gun : MonoBehaviour
     public float MuzzleVelocity {get => muzzleVelocity;}
 
     [SerializeField] 
-    protected int magSize; 
-    public int MagSize {get => magSize;}
-
+    protected int magSize;
     protected int bulletsRemaining;
+    protected bool infiniteAmmo = false;
 
     [SerializeField] 
     protected float reloadTime; 
@@ -49,13 +47,17 @@ public abstract class Gun : MonoBehaviour
     protected Projectile newProjectile;
     protected Shell newShell;
 
+    public event Action OnFire;
+    public event Action OnFireEnd;
+    public bool EffectsPlayer { get => false; }
+
     protected virtual void Start()
     {
         if (reloadTime <= 0){
-            throw new ArgumentOutOfRangeException($"reloadTime of {this.nameOfGun} cannot be <= 0");
+            throw new ArgumentOutOfRangeException($"reloadTime of {nameOfGun} cannot be <= 0");
         }
         
-        muzzleFlash = this.GetComponent<MuzzleFlash>();
+        muzzleFlash = GetComponent<MuzzleFlash>();
 
         //msBetweenShots = 60000 / rpm;
         secondsBetweenShots = 60f / rpm;
@@ -82,26 +84,17 @@ public abstract class Gun : MonoBehaviour
     }
 
     public abstract bool CanReload();
-
-    public string GetNameOfGun()
+    
+    public string DisplayAmmo()
     {
-        return nameOfGun;
+        return $"{bulletsRemaining} / {magSize}";
     }
-
-    public int GetBulletsRemaining()
-    {
-        return bulletsRemaining;
-    }
-
-    public int GetMagSize()
-    {
-        return magSize;
-    }
+    
 
     void RecoilRecovery()
     {
-        this.transform.localPosition = Vector3.SmoothDamp(this.transform.localPosition, Vector3.zero, ref vertRecoilRecoverVelocity, vertRecoilRecoverTime);
-        this.transform.localEulerAngles = Vector3.up * Mathf.SmoothDampAngle(this.transform.localEulerAngles.y, 0, ref horzRecoilRecoverVelocity, horzRecoilRecoverTime);
+        transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Vector3.zero, ref vertRecoilRecoverVelocity, vertRecoilRecoverTime);
+        transform.localEulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.localEulerAngles.y, 0, ref horzRecoilRecoverVelocity, horzRecoilRecoverTime);
     }
 
     protected virtual void FireProjectile()
@@ -111,20 +104,22 @@ public abstract class Gun : MonoBehaviour
             newProjectile = Instantiate<Projectile>(projectilePrefab, pSpawn.position, pSpawn.rotation);
             newProjectile.SetSpeed(muzzleVelocity);
         }
-        bulletsRemaining--;
-
+        if(!infiniteAmmo){
+            bulletsRemaining--;
+        }
+            
         //projectile effects
         newShell = Instantiate<Shell>(shellPrefab, ejector.position, Quaternion.Euler(shellPrefab.transform.eulerAngles + ejector.eulerAngles));
-        newShell.initDirection = this.transform.right;
+        newShell.initDirection = transform.right;
 
         muzzleFlash.Activate();
 
         //recoil
-        this.transform.localPosition -= Vector3.forward * verticalRecoil;
-        this.transform.localEulerAngles += Vector3.up * UnityEngine.Random.Range(-horizontalRecoil, horizontalRecoil);
+        transform.localPosition -= Vector3.forward * verticalRecoil;
+        transform.localEulerAngles += Vector3.up * UnityEngine.Random.Range(-horizontalRecoil, horizontalRecoil);
     }
 
-    protected IEnumerator ReloadRoutine()
+    protected virtual IEnumerator ReloadRoutine()
     {
         AudioManager.instance.PlaySound(reloadSound);
 
@@ -134,12 +129,19 @@ public abstract class Gun : MonoBehaviour
             //animate
             reloadPercent += Time.deltaTime * (1 / reloadTime);
             interpolation = (-Mathf.Pow(reloadPercent, 2) + reloadPercent) * 4; //quadratic function where f(x) goes from 0 > 1 > 0 as x goes from 0 > 1
-            this.transform.localEulerAngles = Vector3.right * Mathf.Lerp(0, -50, interpolation);
+            transform.localEulerAngles = Vector3.right * Mathf.Lerp(0, -50, interpolation);
 
             yield return null;
         }
 
         bulletsRemaining = magSize;
         isReloading = false;
+    }
+
+    public virtual void InfiniteAmmo(bool isOn)
+    {
+        infiniteAmmo = isOn;
+        if (infiniteAmmo)
+            bulletsRemaining = magSize;
     }
 }

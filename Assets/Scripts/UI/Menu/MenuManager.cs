@@ -17,21 +17,24 @@ public class MenuManager : MonoBehaviour
 
     void Start()
     {
-        if (instance != null){
+        if (instance != null)
+        {
             Destroy(this.gameObject);
         } else {
             instance = this;
         }
 
-        for(int i = 0; i < menus.Length; i++){
+        for(int i = 0; i < menus.Length; i++)
+        {
             menuLookup.Add(menus[i].menuName, menus[i].menuHolder);
         }
 
         player = FindAnyObjectByType<Player>();
-        if (player != null){
-            player.OnPause += OnPause;
-            player.OnResume += OnResume;
+        if (player != null)
+        {
             player.OnDeath += OnGameOver;
+            player.GetComponent<PlayerInput>().OnPause += OnPause;
+            player.GetComponent<PlayerInput>().OnResume += OnResume;
         } else {
             Cursor.visible = true;
         }
@@ -72,7 +75,8 @@ public class MenuManager : MonoBehaviour
         float speed = 1 / time;
         float percent = 0;
 
-        while(percent < 1){
+        while(percent < 1)
+        {
             percent += Time.deltaTime * speed;
             fadePlane.color = Color.Lerp(from, to, percent);
             yield return null;
@@ -81,7 +85,8 @@ public class MenuManager : MonoBehaviour
     }
 
     [System.Serializable]
-    public class NamedMenu {
+    public class NamedMenu 
+    {
         public string menuName;
         public GameObject menuHolder;
     }

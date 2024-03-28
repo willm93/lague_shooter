@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LivingEntity : MonoBehaviour, IDamageable
 {
-    public int maxHealth = 100;
+    [SerializeField] protected int maxHealth = 100;
+    public int MaxHealth {get => maxHealth;}
+
     public int currentHealth {get; protected set;}
     protected bool dead;
     public event System.Action OnDeath;
@@ -15,7 +15,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
         dead = false;
     }
 
-    public virtual void TakeHit(int damage, Vector3 hitPoint, Vector3 hitDirection)
+    public virtual void TakeHit(int damage, Vector3 hitDirection)
     {
         TakeDamage(damage);
     }
@@ -24,7 +24,8 @@ public class LivingEntity : MonoBehaviour, IDamageable
     {
         //Debug.Log(this.name + " took " + damage + " damage");
         currentHealth -= damage;
-        if (currentHealth <= 0 && !dead){
+        if (currentHealth <= 0 && !dead)
+        {
             Die();
         }
     }

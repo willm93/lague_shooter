@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent( typeof(SoundLibrary))]
 public class AudioManager : MonoBehaviour
@@ -13,7 +13,6 @@ public class AudioManager : MonoBehaviour
     public float musicVolume {get; private set;}
 
     SoundLibrary soundLibrary;
-
     Transform audioListener;
 
     AudioSource[] musicSources;
@@ -21,6 +20,9 @@ public class AudioManager : MonoBehaviour
 
     AudioSource sfxSource;
     AudioSource contSfxSource;
+    AudioSource unpausableSfxSource;
+
+    PlayerInput playerInput;
 
     void Awake()
     {
@@ -30,8 +32,10 @@ public class AudioManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this.gameObject);
 
+            SceneManager.sceneLoaded += OnSceneLoaded;
+
             soundLibrary = this.GetComponent<SoundLibrary>();
-            audioListener = this.transform.Find("Audio Listener").transform;
+            audioListener = this.transform.Find("Audio Listener").gameObject.transform;
             audioListener.position = Vector3.zero;
 
             masterVolume = PlayerPrefs.GetFloat("master_volume", 1);
@@ -43,6 +47,7 @@ public class AudioManager : MonoBehaviour
                 GameObject newMusicSource = new GameObject("Music Source " + (i + 1));
                 musicSources[i] = newMusicSource.AddComponent<AudioSource>();
                 musicSources[i].volume = musicVolume * masterVolume;
+                musicSources[i].ignoreListenerPause = true;
                 newMusicSource.transform.parent = this.transform;
             }
 
@@ -57,7 +62,33 @@ public class AudioManager : MonoBehaviour
             contSfxSource.volume = sfxVolume * masterVolume;
             contSfxSource.transform.position = Vector3.zero;
             contSfxSource.transform.parent = this.transform;
+
+            GameObject newUnpausableSfxSource = new GameObject("Continuous Sfx Sound Source ");
+            unpausableSfxSource = newUnpausableSfxSource.AddComponent<AudioSource>();
+            unpausableSfxSource.volume = sfxVolume * masterVolume;
+            unpausableSfxSource.ignoreListenerPause = true;
+            unpausableSfxSource.transform.position = Vector3.zero;
+            unpausableSfxSource.transform.parent = this.transform;
         }
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        playerInput = FindAnyObjectByType<PlayerInput>();
+        if (playerInput != null){
+            playerInput.OnPause += OnPause;
+            playerInput.OnResume += OnResume;
+        }
+    }
+
+    void OnPause()
+    {
+        AudioListener.pause = true;
+    }
+
+    void OnResume()
+    {
+        AudioListener.pause = false;
     }
 
     public void SetVolume(float volume, AudioChannel channel)
@@ -79,6 +110,7 @@ public class AudioManager : MonoBehaviour
         musicSources[1].volume = musicVolume * masterVolume;
         sfxSource.volume = sfxVolume * masterVolume;
         contSfxSource.volume = sfxVolume * masterVolume;
+        unpausableSfxSource.volume = sfxVolume * masterVolume;
 
         PlayerPrefs.SetFloat("master_volume", masterVolume);
         PlayerPrefs.SetFloat("sfx_volume", sfxVolume);
@@ -105,14 +137,23 @@ public class AudioManager : MonoBehaviour
     {
         sfxSource.PlayOneShot(soundLibrary.GetClipByName(name));
     }
+    public void PlayUnpausableSound(AudioClip clip)
+    {
+        unpausableSfxSource.PlayOneShot(clip);
+    }
 
-    public void PlayContinuousSound(AudioClip clip)
+    public void PlayUnpausableSound(string name)
+    {
+        unpausableSfxSource.PlayOneShot(soundLibrary.GetClipByName(name));
+    }
+
+    public void PlayContinuousSound(AudioClip clip, bool looping=true)
     {
         if (contSfxSource.isPlaying){
             contSfxSource.Stop();
         }
         contSfxSource.clip = clip;
-        contSfxSource.loop = true;
+        contSfxSource.loop = looping;
         contSfxSource.Play();
     }
 

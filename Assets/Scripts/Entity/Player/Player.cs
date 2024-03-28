@@ -1,162 +1,115 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-[RequireComponent ( typeof (PlayerController))]
+[RequireComponent ( typeof (Rigidbody))]
+[RequireComponent ( typeof (PlayerInput))]
 [RequireComponent ( typeof (GunController))]
+[RequireComponent ( typeof (PowerupController))]
 public class Player : LivingEntity
 {
-    public InputController input {get; private set;}
-    PlayerController controller;
-    GunController gunController;
-    Camera gameCamera;
+    Vector3 velocity;
+    Vector3 direction;
+    Vector3 directionVelocity;
+    [SerializeField] float rotationTime = 0.01f;
+    [SerializeField] float limitedRotationTime = 0.45f;
+    float initRotationTime;
 
-    public Transform crosshair;
-    Vector3 movementDirection;
-    Plane groundPlane;
-    Vector3 mousePoint;
-    Vector3 gunOffsetFromPlayer;
+    Rigidbody myRigidbody;
+    public float moveSpeed = 5f;
+    public float sprintSpeed = 8f;
+    float currentSpeed;
 
-    bool sprintAttempted = false;
-    public bool isPaused = false;
-    public event Action OnPause;
-    public event Action OnResume;
+    public float maxStamina = 100f;
+    public float stamina {get; private set;}
+    public float staminaUsageRate = 10f;
+    public float staminaRechargeRate = 5f;
+    public float staminaRechargeCooldown = 2f;
 
-    void Awake()
+    bool staminaOnCooldown;
+    bool isSprinting;
+    bool infiniteStamina = false;
+    
+    protected override void Start()
     {
-        input = new InputController();
-        controller = this.GetComponent<PlayerController>();
-        gunController = this.GetComponent<GunController>();
-        gameCamera = Camera.main;
-        groundPlane = new Plane(Vector3.up, Vector3.up * gunController.GunPosition().y);
-        EnemySpawner spawner = FindAnyObjectByType<EnemySpawner>();
-        if (spawner != null){
-            spawner.OnNewWave += OnNewWave;
-        }
+        base.Start();
+        myRigidbody = this.GetComponent<Rigidbody>();
+        stamina = maxStamina;
+        initRotationTime = rotationTime;
+        Cursor.visible = false;
+    }
+    
+    void FixedUpdate()
+    {
+        myRigidbody.Move(myRigidbody.position + (velocity * Time.fixedDeltaTime), Quaternion.LookRotation(direction, Vector3.up));
     }
 
-    void Update()
+    public void SetVelocity(Vector3 direction, bool sprintAttempted)
     {
-        gunOffsetFromPlayer = gunController.GunPosition() - this.transform.position;
-        crosshair.position = GetMousePoint() + gunOffsetFromPlayer;
-        controller.Face(GetMousePoint() - this.transform.position);
-        controller.SetVelocity(movementDirection, sprintAttempted);
+        isSprinting = CanSprint() && sprintAttempted && direction != Vector3.zero;
+        UpdateStamina();
+        currentSpeed =  isSprinting ? sprintSpeed : moveSpeed;
+
+        velocity = direction * currentSpeed;          
     }
 
-    void OnNewWave(int _i)
+    bool CanSprint()
     {
-        gunController.NextGun();
+        return infiniteStamina || (stamina > 0 && !staminaOnCooldown);
     }
 
-    void OnEnable()
+    void UpdateStamina()
     {
-        input.Enable();
-        input.Player.Movement.performed += OnMovementPerformed;
-        input.Player.Movement.canceled += OnMovementCanceled;
-
-        input.Player.Sprint.performed += OnSprintPerformed;
-        input.Player.Sprint.canceled += OnSprintCanceled;
-
-        input.Player.Fire.performed += OnFirePerformed;
-        input.Player.Fire.canceled += OnFireCanceled;
-
-        input.Player.NextGun.performed += OnNextGunPerformed;
-
-        input.Player.Reload.performed += OnReloadPerformed;
-
-        input.UI.Pause.performed += OnPausePerformed;
-    }
-
-    void OnDisable()
-    {
-        input.Disable();
-        input.Player.Movement.performed -= OnMovementPerformed;
-        input.Player.Movement.canceled -= OnMovementCanceled;
-
-        input.Player.Sprint.performed -= OnSprintPerformed;
-        input.Player.Sprint.canceled -= OnSprintCanceled;
-
-        input.Player.Fire.performed -= OnFirePerformed;
-        input.Player.Fire.canceled -= OnFireCanceled;
-
-        input.Player.NextGun.performed -= OnNextGunPerformed;
-
-        input.Player.Reload.performed -= OnReloadPerformed;
-
-        input.UI.Pause.performed -= OnPausePerformed;
-    }
-
-    void OnMovementPerformed(InputAction.CallbackContext value)
-    {
-        movementDirection = value.ReadValue<Vector3>().normalized;
-    }
-
-    void OnMovementCanceled(InputAction.CallbackContext value)
-    {
-        movementDirection = Vector3.zero;
-    }
-
-    void OnSprintPerformed(InputAction.CallbackContext value)
-    {
-        sprintAttempted = true;
-    }
-
-    void OnSprintCanceled(InputAction.CallbackContext value)
-    {
-        sprintAttempted = false;
-    }
-
-    void OnFirePerformed(InputAction.CallbackContext value)
-    {
-        gunController.OnTriggerHold();
-    }
-
-    void OnFireCanceled(InputAction.CallbackContext value)
-    {
-        gunController.OnTriggerRelease();
-    }
-
-    void OnNextGunPerformed(InputAction.CallbackContext value)
-    {
-        gunController.NextGun();
-    }
-
-    void OnReloadPerformed(InputAction.CallbackContext value)
-    {
-        gunController.Reload();
-    }
-
-    void OnPausePerformed(InputAction.CallbackContext value)
-    {
-        isPaused = !isPaused;
-        if(isPaused){
-            input.Player.Disable();
-            Time.timeScale = 0;
-            OnPause?.Invoke();
-        } else {
-            input.Player.Enable();
-            Time.timeScale = 1;
-            OnResume?.Invoke();
-        }
-    }
-
-    public void ExternalUnpause() //from UI
-    {
-        isPaused = false;
-        input.Player.Enable();
-        Time.timeScale = 1;
-        OnResume?.Invoke();
-    }
-
-    Vector3 GetMousePoint()
-    {
-        Ray cameraToMouseRay = gameCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (groundPlane.Raycast(cameraToMouseRay, out float rayDistance))
+        if (isSprinting && !infiniteStamina)
         {
-            mousePoint = cameraToMouseRay.GetPoint(rayDistance);
+            stamina -= staminaUsageRate * Time.deltaTime;
         }
-        return mousePoint;
+
+        if ((!isSprinting || infiniteStamina) && stamina < maxStamina)
+        {
+            stamina += staminaRechargeRate * Time.deltaTime;
+        }
+
+        if (stamina <= 0 && !staminaOnCooldown)
+        {
+            staminaOnCooldown = true;
+            StartCoroutine(StaminaCooldown());
+        }
+    }
+
+    IEnumerator StaminaCooldown()
+    {
+        yield return new WaitForSeconds(staminaRechargeCooldown);
+        staminaOnCooldown = false;
+    }
+
+    public void SetDirection(Vector3 _direction)
+    {
+        _direction.y = 0;
+        direction = Vector3.SmoothDamp(transform.forward, _direction, ref directionVelocity, rotationTime);
+    }
+
+    public void LimitRotation(bool isOn)
+    {
+        if (isOn) {
+            rotationTime = limitedRotationTime;
+        } else {
+            rotationTime = initRotationTime;
+        }
+    }
+    
+    public void BigRecoil()
+    {
+        myRigidbody.AddForce(-transform.forward * 4250f);
+    }
+
+    public void Heal(int amount)
+    {
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+    }
+
+    public void InfiniteStamina(bool isOn)
+    {
+        infiniteStamina = isOn;
     }
 }
